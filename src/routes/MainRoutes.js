@@ -14,6 +14,10 @@ const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
 const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
 
+//Others 
+const OtherAddPatient = Loadable(lazy(() => import('views/others/AddPatien')));
+const OtherSp32 = Loadable(lazy(() => import('views/others/SP32')));
+const OtherSuscription = Loadable(lazy(() => import('views/others/Suscription')))
 // sample page routing
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
@@ -78,6 +82,33 @@ const MainRoutes = {
         {
           path: 'material-icons',
           element: <UtilsMaterialIcons />
+        }
+      ]
+    },
+    {
+      path: 'other',
+      children: [
+        {
+          path: 'add-patient',
+          element: <OtherAddPatient />
+        }
+      ]
+    },
+    {
+      path: 'other',
+      children: [
+        {
+          path: 'conectar-dispositivo',
+          element: <OtherSp32 />
+        }
+      ]
+    },
+    {
+      path: 'other',
+      children: [
+        {
+          path: 'suscription',
+          element: <OtherSuscription />
         }
       ]
     },

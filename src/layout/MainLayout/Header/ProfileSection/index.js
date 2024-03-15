@@ -2,17 +2,18 @@ import { useState, useRef, useEffect } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
+//assets
+import { IconUserCircle,IconLogout,  IconSettings,} from '@tabler/icons';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
   Avatar,
   Box,
-  Card,
+ 
   Chip,
   ClickAwayListener,
   Divider,
-  Grid,
+  //Grid,
   //InputAdornment,
   List,
   ListItemButton,
@@ -22,7 +23,9 @@ import {
   Paper,
   Popper,
   Stack,
-  Typography
+  Typography,
+ 
+
 } from '@mui/material';
 
 // third-party
@@ -32,10 +35,10 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 //import UpgradePlanCard from './UpgradePlanCard';
-import User1 from 'assets/images/users/user-round.svg';
+// import User1 from 'assets/images/users/user-round.svg';
 
-// assets
-import { IconLogout,  IconSettings, IconUser } from '@tabler/icons';
+
+
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -52,6 +55,7 @@ const ProfileSection = () => {
   const anchorRef = useRef(null);
   const handleLogout = async () => {
     console.log('Logout');
+    navigate('/pages/login/login3');
   };
 
   const handleClose = (event) => {
@@ -97,7 +101,8 @@ const ProfileSection = () => {
             background: `${theme.palette.primary.main}!important`,
             color: theme.palette.primary.light,
             '& svg': {
-              stroke: theme.palette.primary.light
+              color: theme.palette.primary.light,
+              stroke: theme.palette.warning.light
             }
           },
           '& .MuiChip-label': {
@@ -106,7 +111,7 @@ const ProfileSection = () => {
         }}
         icon={
           <Avatar
-            src={User1}
+            src={IconUserCircle}
             sx={{
               ...theme.typography.mediumAvatar,
               margin: '8px 0 8px 8px !important',
@@ -151,43 +156,26 @@ const ProfileSection = () => {
                 <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
                   <Box sx={{ p: 2 }}>
                     <Stack>
-                      <Stack direction="row" spacing={0.5} alignItems="center">
-                        <Typography variant="h4">Buenos dias,</Typography>
+                      <Stack direction="row" spacing={0.2} alignItems="center">
+                        <Typography variant="h4">Bienvenido,</Typography>
                         <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
                           Johne Doe
                         </Typography>
                       </Stack>
-                      <Typography variant="subtitle2">Porject Admin</Typography>
-                    </Stack>
-                    {/*<OutlinedInput
-                      sx={{ width: '100%', pr: 1, pl: 2, my: 2 }}
-                      id="input-search-profile"
-                      value={value}
-                      onChange={(e) => setValue(e.target.value)}
-                      placeholder="Search profile options"
-                      startAdornment={
-                        <InputAdornment position="start">
-                          <IconSearch stroke={1.5} size="1rem" color={theme.palette.grey[500]} />
-                        </InputAdornment>
-                      }
-                      aria-describedby="search-helper-text"
-                      inputProps={{
-                        'aria-label': 'weight'
-                      }}
-                    />*/}
-                    <Divider />
+                      <Typography variant="subtitle2">Especialista</Typography>
+                    </Stack>        
                   </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
-                    <Box sx={{ p: 2 }}>
+                    <Box sx={{ p: 1 }}>
                       {/*<UpgradePlanCard />*/}
-                      <Divider />
-                      <Card
+                    
+                      {/* <Card
                         sx={{
                           bgcolor: theme.palette.primary.light,
                           my: 2
                         }}
                       >
-                        {/*<CardContent>
+                        <CardContent>
                           <Grid container spacing={3} direction="column">
                             <Grid item>
                               <Grid item container alignItems="center" justifyContent="space-between">
@@ -221,8 +209,8 @@ const ProfileSection = () => {
                               </Grid>
                             </Grid>
                           </Grid>
-                      </CardContent>*/}
-                      </Card>
+                      </CardContent>
+                      </Card> */}
                       <Divider />
                       <List
                         component="nav"
@@ -250,7 +238,7 @@ const ProfileSection = () => {
                           </ListItemIcon>
                           <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
                         </ListItemButton>
-                        <ListItemButton
+                        {/* <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 1}
                           onClick={(event) => handleListItemClick(event, 1, '#')}
@@ -277,7 +265,7 @@ const ProfileSection = () => {
                               </Grid>
                             }
                           />
-                        </ListItemButton>
+                        </ListItemButton> */}
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 4}

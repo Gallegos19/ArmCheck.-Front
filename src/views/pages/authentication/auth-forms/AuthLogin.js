@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-
+import { useNavigate } from 'react-router';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -38,11 +38,13 @@ import Google from 'assets/images/icons/social-google.svg';
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const FirebaseLogin = ({ ...others }) => {
+  const navigate = useNavigate();
   const theme = useTheme();
   const scriptedRef = useScriptRef();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const customization = useSelector((state) => state.customization);
   const [checked, setChecked] = useState(true);
+  const [bandera, setBandera] = useState(false);
 
   const googleHandler = async () => {
     console.error('Login');
@@ -56,6 +58,28 @@ const FirebaseLogin = ({ ...others }) => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const handleLogin = (values) => {
+    console.log(values)
+    // Verificar si todos los campos obligatorios están llenos
+    if (!values.email || !values.password) {
+      setBandera(true);
+      console.error("Todos los campos son obligatorios");
+      return;
+    }
+  
+    // Verificar si el checkbox de acuerdo con los términos y condiciones está marcado
+    if (!checked) {
+      setBandera(true)
+      console.error("Debe aceptar los términos y condiciones");
+      return;
+    }
+  
+    console.log("Registrado");
+    setBandera(false)
+    navigate('/dashboard/default');
+  }
+
 
   return (
     <>
@@ -120,8 +144,8 @@ const FirebaseLogin = ({ ...others }) => {
 
       <Formik
         initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
+          email: '',
+          password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -129,6 +153,7 @@ const FirebaseLogin = ({ ...others }) => {
           password: Yup.string().max(255).required('Contraseña requerida')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+          handleLogin(values)
           try {
             if (scriptedRef.current) {
               setStatus({ success: true });
@@ -212,10 +237,12 @@ const FirebaseLogin = ({ ...others }) => {
                 <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
             )}
-
+            {bandera &&(
+              <FormHelperText error>Todos los campos son requeridos</FormHelperText>
+            )}
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
+                <Button disableElevation disabled={isSubmitting} onClick={handleLogin} fullWidth size="large" type="submit" variant="contained" color="secondary">
                 Iniciar Sesión
                 </Button>
               </AnimateButton>

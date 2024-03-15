@@ -30,7 +30,9 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     top: -160,
     right: -130
   },
-  maxWidth: '800px' // Cambia el valor de maxWidth según tu preferencia
+  p: 3,
+  width: 300, // Ancho fijo para todas las tarjetas
+  height: 300, // Alto fijo para todas las tarjetas
 }));
 
 // Función para dividir el arreglo en grupos de dos
@@ -48,15 +50,16 @@ const chunkArray = (arr, size) => {
 const TotalIncomeLightCard = ({ isLoading }) => {
   // Estado para almacenar la lista de pacientes
   const [patients] = useState([
-    { nombre: 'Gerson' },
-    { nombre: 'Juan' },
-    { nombre: 'María' },
-    { nombre: 'Carlos' },
-    { nombre: 'Laura' },
-    { nombre: 'Pedro' },
-    { nombre: 'Carlos' },
-    { nombre: 'Laura' },
-    { nombre: 'Pedro' },
+    {  
+      nombre: 'Gerson Daniel', apellido: 'Garcia Dominguez', edad: 20, altura: 1.75,},
+    { nombre: 'Juan', apellido: 'Perez', edad: 25, altura: 1.8 },
+    { nombre: 'María', apellido: 'Gonzalez', edad: 30, altura: 1.65 },
+    { nombre: 'Carlos', apellido: 'Martinez', edad: 35, altura: 1.7 },
+    { nombre: 'Laura', apellido: 'Lopez', edad: 40, altura: 1.6 },
+    { nombre: 'Pedro', apellido: 'Sanchez', edad: 45, altura: 1.85 },
+    { nombre: 'Carlos', apellido: 'Ramirez', edad: 50, altura: 1.75 },
+    { nombre: 'Laura', apellido: 'Hernandez', edad: 55, altura: 1.68 },
+    { nombre: 'Pedro', apellido: 'Gutierrez', edad: 60, altura: 1.9 },
   ]);
 
   // Dividir el arreglo de pacientes en grupos de tres
@@ -67,17 +70,34 @@ const TotalIncomeLightCard = ({ isLoading }) => {
       {isLoading ? (
         <TotalIncomeCard /> // Renderiza un componente de carga si isLoading es true
       ) : (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px', flexWrap: 'wrap' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px', flexWrap: 'wrap', justifyContent:'center' }}>
           {/* Mapear los grupos de pacientes */}
           {patientGroups.map((group, index) => (
             <Box key={index} sx={{ display: 'flex', justifyContent:'center', gap: '100px'}}>
               {/* Mapear cada paciente en el grupo */}
               {group.map((patient, patientIndex) => (
                 <CardWrapper key={patientIndex} border={false} content={false}>
-                  <Box sx={{ p: 10 }}>
-                    <List sx={{ py: 0 }}>
-                      <ListItem key={patientIndex} alignItems="center" disableGutters sx={{ py: 0 , width:'100px', justifyContent:"center"}}>
-                        <Typography variant="body1">{patient.nombre}</Typography>
+                  <Box sx={{ p: 3 }}>
+                  <List sx={{ py: 5 }}>
+                      <ListItem key={patientIndex} alignItems="center" disableGutters>
+                        <Typography variant="body1">
+                          <strong>Nombre:</strong> {patient.nombre}
+                        </Typography>
+                      </ListItem>
+                      <ListItem key={patientIndex} alignItems="center" disableGutters>
+                        <Typography variant="body1">
+                          <strong>Apellidos:</strong> {patient.apellido}
+                        </Typography>
+                      </ListItem>
+                      <ListItem key={patientIndex} alignItems="center" disableGutters>
+                        <Typography variant="body1">
+                          <strong>Edad:</strong> {patient.edad}
+                        </Typography>
+                      </ListItem>
+                      <ListItem key={patientIndex} alignItems="center" disableGutters>
+                        <Typography variant="body1">
+                          <strong>Altura:</strong> {patient.altura}
+                        </Typography>
                       </ListItem>
                     </List>
                   </Box>

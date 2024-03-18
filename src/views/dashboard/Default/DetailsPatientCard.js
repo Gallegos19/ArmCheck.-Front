@@ -67,11 +67,38 @@ const EditPatientCard = ({ patient, onCancel, onSave }) => {
               onChange={handleChange}
             />
           </ListItem>
+          <ListItem disableGutters>
+            <TextField
+              name="apellidos"
+              label="Apellidos"
+              value={editedPatient.apellidos}
+              onChange={handleChange}
+            />
+          </ListItem>
+          <ListItem disableGutters>
+            <TextField
+              name="edad"
+              label="Edad"
+              value={editedPatient.edad}
+              onChange={handleChange}
+            />
+          </ListItem>
+          <ListItem disableGutters>
+            <TextField
+              name="altura"
+              label="Altura"
+              value={editedPatient.altura}
+              onChange={handleChange}
+            />
+          </ListItem>
+        
           {/* Agrega más campos de texto para otros datos del paciente (apellido, edad, altura, etc.) */}
         </List>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Button variant="contained" onClick={handleSave}>Guardar cambios</Button>
           <Button variant="contained" onClick={onCancel}>Cancelar</Button>
+          <Button variant="contained" onClick={onCancel}>Analizar</Button>
+          <Button variant="contained" onClick={onCancel}>Sensar</Button>
         </Box>
       </Box>
     </CardWrapper>

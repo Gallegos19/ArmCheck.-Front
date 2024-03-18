@@ -37,16 +37,16 @@ const CardButton = styled(Button)(({ theme }) => ({
 }));
 
 const TotalIncomeLightCard = ({ isLoading }) => {
-  const [patients] = useState([
-    { nombre: 'Gerson Daniel', apellido: 'Garcia Dominguez', edad: 20, altura: 1.75 },
-    { nombre: 'Juan', apellido: 'Perez', edad: 25, altura: 1.8 },
-    { nombre: 'María', apellido: 'Gonzalez', edad: 30, altura: 1.65 },
-    { nombre: 'Carlos', apellido: 'Martinez', edad: 35, altura: 1.7 },
-    { nombre: 'Laura', apellido: 'Lopez', edad: 40, altura: 1.6 },
-    { nombre: 'Pedro', apellido: 'Sanchez', edad: 45, altura: 1.85 },
-    { nombre: 'Carlos', apellido: 'Ramirez', edad: 50, altura: 1.75 },
-    { nombre: 'Laura', apellido: 'Hernandez', edad: 55, altura: 1.68 },
-    { nombre: 'Pedro', apellido: 'Gutierrez', edad: 60, altura: 1.9 },
+  const  [patients] = useState([
+    { nombre: 'Gerson Daniel', apellidos: 'Garcia Dominguez', edad: 20, altura: 1.75 },
+    { nombre: 'Juan', apellidos: 'Perez', edad: 25, altura: 1.8 },
+    { nombre: 'María', apellidos: 'Gonzalez', edad: 30, altura: 1.65 },
+    { nombre: 'Carlos', apellidos: 'Martinez', edad: 35, altura: 1.7 },
+    { nombre: 'Laura', apellidos: 'Lopez', edad: 40, altura: 1.6 },
+    { nombre: 'Pedro', apellidos: 'Sanchez', edad: 45, altura: 1.85 },
+    { nombre: 'Carlos', apellidos: 'Ramirez', edad: 50, altura: 1.75 },
+    { nombre: 'Laura', apellidos: 'Hernandez', edad: 55, altura: 1.68 },
+    { nombre: 'Pedro', apellidos: 'Gutierrez', edad: 60, altura: 1.9 },
   ]);
 
   const chunkArray = (arr, size) => {
@@ -109,7 +109,7 @@ const TotalIncomeLightCard = ({ isLoading }) => {
                       </ListItem>
                       <ListItem key={patientIndex} disableGutters>
                         <Typography variant="body1">
-                          <strong>Apellidos:</strong> {patient.apellido}
+                          <strong>Apellidos:</strong> {patient.apellidos}
                         </Typography>
                       </ListItem>
                       <ListItem key={patientIndex} disableGutters>

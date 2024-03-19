@@ -28,8 +28,8 @@ const NavItem = ({ item, level }) => {
   ) : (
     <FiberManualRecordIcon
       sx={{
-        width: customization.isOpen.findIndex((id) => id === item?.id) > -1 ? 8 : 6,
-        height: customization.isOpen.findIndex((id) => id === item?.id) > -1 ? 8 : 6
+        width: customization.isOpen.findIndex((id) => id === item?.id) > -1 ? 10 : 6,
+        height: customization.isOpen.findIndex((id) => id === item?.id) > -1 ? 10 : 6
       }}
       fontSize={level > 0 ? 'inherit' : 'medium'}
     />
@@ -70,7 +70,7 @@ const NavItem = ({ item, level }) => {
       disabled={item.disabled}
       sx={{
         borderRadius: `${customization.borderRadius}px`,
-        mb: 0.5,
+        mb: 2,
         alignItems: 'flex-start',
         backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
         py: level > 1 ? 1 : 1.25,

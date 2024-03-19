@@ -67,7 +67,7 @@ const NavCollapse = ({ menu, level }) => {
       case 'collapse':
         return <NavCollapse key={item.id} menu={item} level={level + 1} />;
       case 'item':
-        return <NavItem key={item.id} item={item} level={level + 1} />;
+        return <NavItem key={item.id} item={item} level={level + 2} />;
       default:
         return (
           <Typography key={item.id} variant="h6" color="error" align="center">

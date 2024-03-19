@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
@@ -16,6 +15,7 @@ import AuthFooter from 'ui-component/cards/AuthFooter';
 // ===============================|| AUTH3 - REGISTER ||=============================== //
 
 const Register = () => {
+
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -29,7 +29,7 @@ const Register = () => {
                 <Grid container spacing={1} alignItems="center" justifyContent="center">
                   <Grid item sx={{ mb: 3 }}>
                     <Link to="#">
-                      <Logo />
+                      <Logo size='250'/>
                     </Link>
                   </Grid>
                   <Grid item xs={12}>

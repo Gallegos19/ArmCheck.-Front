@@ -47,7 +47,7 @@ const ProfileSection = () => {
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
   //const [value, setValue] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const selectedIndex = useState(-1);
   const [open, setOpen] = useState(false);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
@@ -65,14 +65,14 @@ const ProfileSection = () => {
     setOpen(false);
   };
 
-  const handleListItemClick = (event, index, route = '') => {
-    setSelectedIndex(index);
-    handleClose(event);
+  // const handleListItemClick = (event, index, route = '') => {
+  //   setSelectedIndex(index);
+  //   handleClose(event);
 
-    if (route && route !== '') {
-      navigate(route);
-    }
-  };
+  //   if (route && route !== '') {
+  //     navigate(route);
+  //   }
+  // };
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -163,12 +163,11 @@ const ProfileSection = () => {
                         </Typography>
                       </Stack>
                       <Typography variant="subtitle2">Especialista</Typography>
-                    </Stack>        
+                    </Stack>
                   </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 1 }}>
                       {/*<UpgradePlanCard />*/}
-                    
                       {/* <Card
                         sx={{
                           bgcolor: theme.palette.primary.light,
@@ -228,7 +227,7 @@ const ProfileSection = () => {
                           }
                         }}
                       >
-                        <ListItemButton
+                        {/* <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 0}
                           onClick={(event) => handleListItemClick(event, 0, '#')}
@@ -237,7 +236,7 @@ const ProfileSection = () => {
                             <IconSettings stroke={1.5} size="1.3rem" />
                           </ListItemIcon>
                           <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
-                        </ListItemButton>
+                        </ListItemButton> */}
                         {/* <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 1}

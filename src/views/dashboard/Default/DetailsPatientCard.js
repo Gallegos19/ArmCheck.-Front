@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Button, TextField, List, ListItem } from '@mui/material';
+import { Box, Button, TextField, List, ListItem, Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import CardHistorial from 'ui-component/extended/CardHistorial';
 
 const CardWrapper = styled(Box)(({ theme, top, left }) => ({
   position: 'fixed',
-  top: top || '60%', // Posición vertical centrada por defecto
-  left: left || '55%', // Posición horizontal centrada por defecto
+  top: top || '60%',
+  left: left || '55%',
   transform: 'translate(-50%, -50%)',
   backgroundColor: 'white',
   padding: theme.spacing(2),
@@ -14,37 +15,20 @@ const CardWrapper = styled(Box)(({ theme, top, left }) => ({
   boxShadow: theme.shadows[3],
   zIndex: 1000,
   color: 'black',
-  '&:after': {
-    content: '""',
-    position: 'absolute',
-    width: 210,
-    height: 210,
-    background: `linear-gradient(210.04deg, ${theme.palette.warning.dark} 50.94%, rgba(144, 202, 249, 0) 83.49%)`,
-    borderRadius: '50%',
-    top: -30,
-    right: -180,
-  },
-  '&:before': {
-    content: '""',
-    position: 'absolute',
-    width: 210,
-    height: 210,
-    background: `linear-gradient(40.9deg, ${theme.palette.warning.dark} -14.02%, rgba(144, 202, 249, 0) 70.50%)`,
-    borderRadius: '50%',
-    top: -160,
-    right: -130,
-  },
   p: 3,
   width: 600,
-  height: 400,
+  height: 450,
   '@media (max-width: 600px)': {
     width: 300,
-    height: 400,
+    height: 700,
+    
+
   },
 }));
 
 const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
   const [editedPatient, setEditedPatient] = useState({ ...patient });
+  const [showInput, setShowInput] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,16 +42,40 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
     onSave(editedPatient);
   };
 
+  const handleAnalizarClick = () => {
+    setShowInput(true);
+  };
+
+  const handleInputChange = (e) => {
+    const { value } = e.target;
+    // Actualiza el paciente editado con el nuevo valor del input
+    setEditedPatient((prevPatient) => ({
+      ...prevPatient,
+      nombre: value,
+    }));
+  };
+
+
+  const [historial] = useState([
+    { id: 'GA32', fecha: '24/24/24' },
+    { id: 'GA65', fecha: '24/20/24' },
+    { id: 'GA56', fecha: '24/2/24' }
+  ]);
+
+  const [cardsHisto] = useState(3);
+
   return (
     <CardWrapper top={top} left={left} onClick={(e) => e.stopPropagation()}>
-      <Box >
-        <List sx={{ py: 2 }}>
+      <Box>
+
+        <List sx={{ py: 2, }}>
           <ListItem disableGutters>
             <TextField
               name="nombre"
               label="Nombre"
               value={editedPatient.nombre}
               onChange={handleChange}
+
             />
           </ListItem>
           <ListItem disableGutters>
@@ -86,21 +94,34 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
               onChange={handleChange}
             />
           </ListItem>
-          <ListItem disableGutters>
+          <ListItem disableGutters sx={{ gap: "50px" }}>
             <TextField
               name="altura"
               label="Altura"
               value={editedPatient.altura}
               onChange={handleChange}
             />
+
           </ListItem>
-          {/* Agrega más campos de texto para otros datos del paciente (apellido, edad, altura, etc.) */}
+          {/* Agrega otros campos de texto para editar los datos del paciente */}
         </List>
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap:'100px','@media (max-width: 600px)': {gap: '20px'}, }}>
+        
+        <CardHistorial historial={historial} cardsHisto={cardsHisto} />
+
+        <Box sx={{ position: 'absolute', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '120px', bottom: '20px', '@media (max-width: 600px)': { gap: '20px' } }}>
           <Button variant="contained" onClick={handleSave}>Guardar cambios</Button>
-          <Button variant="contained" onClick={onCancel}>Analizar</Button>
+          <Button variant="contained" onClick={handleAnalizarClick}>Analizar</Button>
           <Button variant="contained" onClick={onCancel}>Cancelar</Button>
         </Box>
+        {/* Muestra el Input si showInput es true */}
+        {showInput && (
+
+          <Input
+            placeholder="Ingrese aquí"
+            value={'Tu ID es: '+editedPatient.nombre} // Asigna el valor del input al nombre del paciente editado
+            onChange={handleInputChange}
+          />
+        )}
       </Box>
     </CardWrapper>
   );
@@ -110,8 +131,8 @@ EditPatientCard.propTypes = {
   patient: PropTypes.object.isRequired,
   onCancel: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
-  top: PropTypes.string, // Propiedad opcional para controlar la posición superior
-  left: PropTypes.string, // Propiedad opcional para controlar la posición izquierda
+  top: PropTypes.string,
+  left: PropTypes.string,
 };
 
 export default EditPatientCard;

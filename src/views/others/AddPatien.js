@@ -19,8 +19,8 @@ import {
   //Grid,
   //IconButton,
   //InputAdornment,
-  FormControlLabel,
-  Checkbox,
+  //FormControlLabel,
+  //Checkbox,
   MenuItem,
   InputLabel,
   OutlinedInput,
@@ -42,7 +42,7 @@ const AddPatient = ({ ...others }) => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const scriptedRef = useScriptRef();
   const [bandera, setBandera] = useState(false);
-  const [hasChronicDisease, setHasChronicDisease] = useState(false);
+  //const [hasChronicDisease, setHasChronicDisease] = useState(false);
 
   // ==============================|| SAMPLE PAGE ||============================== //
   const handleLogin = (values) => {
@@ -229,7 +229,7 @@ const AddPatient = ({ ...others }) => {
                     <MenuItem value="">Seleccione</MenuItem>
                     <MenuItem value="masculino">Masculino</MenuItem>
                     <MenuItem value="femenino">Femenino</MenuItem>
-                    <MenuItem value="otro">39 tipos de gei</MenuItem>
+                    <MenuItem value="otro">Otro</MenuItem>
                   </Select>
 
                   {touched.genero && errors.genero && (
@@ -246,13 +246,13 @@ const AddPatient = ({ ...others }) => {
                 </Box>
               )}
               {bandera && <FormHelperText error>Todos los campos son requeridos</FormHelperText>}
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={<Checkbox checked={hasChronicDisease} onChange={(e) => setHasChronicDisease(e.target.checked)} />}
                 label="¿El paciente tiene alguna enfermedad crónica?"
-              />
+              /> */}
 
               {/* Inputs adicionales condicionalmente renderizados */}
-              {hasChronicDisease && (
+              {/* {hasChronicDisease && (
                 <div
                   style={{ display: 'flex', flexDirection: 'row', width: '100%', gap: '1%', flexWrap: isSmallScreen ? 'wrap' : 'nowrap' }}
                 >
@@ -294,7 +294,7 @@ const AddPatient = ({ ...others }) => {
                   </FormControl>
                   
                 </div>
-              )}
+              )} */}
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <Box sx={{ mt: 3 }} width={'40%'}>
                   <AnimateButton>

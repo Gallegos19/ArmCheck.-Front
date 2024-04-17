@@ -1,12 +1,15 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
 import {
   Avatar,
+  Button,
   Card,
   CardContent,
   Grid,
+  Input,
   LinearProgress,
   List,
   ListItem,
@@ -15,8 +18,6 @@ import {
   Typography,
   linearProgressClasses
 } from '@mui/material';
-
-
 
 // styles
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -82,50 +83,108 @@ LinearProgressWithLabel.propTypes = {
 
 const MenuCard = () => {
   const theme = useTheme();
+  const [inputValue, setInputValue] = useState('');
+  const [isValid, setIsValid] = useState(true); // Estado inicial de validación: true
+  const [sala, setSala] = useState(false);
+
+  // Función de validación
+  const validateInput = (value) => {
+    // Ejemplo de validación: el valor no puede estar vacío
+    const isValid = value.trim() !== '';
+    setIsValid(isValid);
+    return isValid;
+  };
+
+  // Manejador de cambio del input
+  const handleInputChange = (event) => {
+    const value = event.target.value;
+    setInputValue(value);
+    validateInput(value); // Validar el nuevo valor del input
+  };
+
+  // Manejador del envío del formulario
+  const handleSubmit = () => {
+    if (validateInput(inputValue)) {
+      // Si el input es válido, realizar el envío de datos
+      setSala(true);
+      console.log('Input válido, enviando datos:', inputValue);
+    } else {
+      // Si el input no es válido, mostrar un mensaje de error o realizar otra acción
+      console.error('Input no válido, no se puede enviar');
+      setSala(false);
+    }
+  };
 
   return (
-    <CardStyle>
-      <CardContent sx={{ p: 2 }}>
-        <List sx={{ p: 0, m: 0 }}>
-          <ListItem alignItems="flex-start" disableGutters sx={{ p: 0 }}>
-            <ListItemAvatar sx={{ mt: 0 }}>
-              <Avatar
-                variant="rounded"
-                sx={{
-                  ...theme.typography.commonAvatar,
-                  ...theme.typography.largeAvatar,
-                  color: theme.palette.primary.main,
-                  border: 'none',
-                  borderColor: theme.palette.primary.main,
-                  background: '#fff',
-                  marginRight: '12px'
-                }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-router" width="24" height="24" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#00abfb" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M3 13m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
-                  <path d="M17 17l0 .01" />
-                  <path d="M13 17l0 .01" />
-                  <path d="M15 13l0 -2" />
-                  <path d="M11.75 8.75a4 4 0 0 1 6.5 0" />
-                  <path d="M8.5 6.5a8 8 0 0 1 13 0" />
-                </svg>
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              sx={{ mt: 0 }}
-              primary={
-                <Typography variant="subtitle1" sx={{ color: theme.palette.primary[800] }}>
-                  Conectado<br />Desconectado
-                </Typography>
-              }
-            // secondary={<Typography variant="caption"> 28/23 GB</Typography>}
-            />
-          </ListItem>
-        </List>
-        <LinearProgressWithLabel value={100} />
-      </CardContent>
-    </CardStyle>
+    <>
+      <CardStyle style={{ marginBottom: '5%' }}>
+        <CardContent sx={{ p: 2 }}>
+          <List sx={{ p: 0, m: 0 }}>
+            <ListItem alignItems="flex-start" disableGutters sx={{ p: 0 }}>
+              <ListItemAvatar sx={{ mt: 0 }}>
+                <Avatar
+                  variant="rounded"
+                  sx={{
+                    ...theme.typography.commonAvatar,
+                    ...theme.typography.largeAvatar,
+                    color: theme.palette.primary.main,
+                    border: 'none',
+                    borderColor: theme.palette.primary.main,
+                    background: '#fff',
+                    marginRight: '12px'
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="icon icon-tabler icon-tabler-router"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="#00abfb"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M3 13m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+                    <path d="M17 17l0 .01" />
+                    <path d="M13 17l0 .01" />
+                    <path d="M15 13l0 -2" />
+                    <path d="M11.75 8.75a4 4 0 0 1 6.5 0" />
+                    <path d="M8.5 6.5a8 8 0 0 1 13 0" />
+                  </svg>
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                sx={{ mt: 1.5 }}
+                primary={
+                  <Typography variant="subtitle1" sx={{ color: theme.palette.primary[800] }}>
+                    {sala && <a>Conectado</a>}
+                    {!sala && <a>Desconectado</a>}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          </List>
+          {sala && <LinearProgressWithLabel value={100} />}
+          {!sala && <LinearProgressWithLabel value={0} />}
+        </CardContent>
+      </CardStyle>
+      <br />
+      {!sala && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+          <Input placeholder="Ingrese código de sala" value={inputValue} onChange={handleInputChange} style={{ textAlign: 'center' }} />
+          <Button onClick={handleSubmit}>Enviar</Button>
+          {/* Mensaje de error si el input no es válido */}
+          {!isValid && (
+            <Typography variant="caption" color="error">
+              Ingrese un código válido
+            </Typography>
+          )}
+        </div>
+      )}
+    </>
   );
 };
 

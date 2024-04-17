@@ -18,14 +18,14 @@ const other = {
       icon: icons.IconCirclePlus,
       breadcrumbs: false
     },
-    {
-      id: 'Sp32',
-      title: 'Dispositivo',
-      type: 'item',
-      url: '/other/conectar-dispositivo',
-      icon: icons.IconRouter,
-      breadcrumbs: false
-    },
+    // {
+    //   id: 'Sp32',
+    //   title: 'Dispositivo',
+    //   type: 'item',
+    //   url: '/other/conectar-dispositivo',
+    //   icon: icons.IconRouter,
+    //   breadcrumbs: false
+    // },
     {
         id: 'suscription',
         title: 'Membresia',

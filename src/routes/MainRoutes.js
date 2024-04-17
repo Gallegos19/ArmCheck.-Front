@@ -1,7 +1,7 @@
 // En esta seccion te manda a una pagina pero con los elementos del inicio como el nav y el menu
 
 import { lazy } from 'react';
-
+import { Navigate } from 'react-router-dom';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
@@ -16,29 +16,36 @@ const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
 const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
 const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
 
-//Others 
+//Others
 const OtherAddPatient = Loadable(lazy(() => import('views/others/AddPatien')));
 const OtherSp32 = Loadable(lazy(() => import('views/others/SP32')));
-const OtherSuscription = Loadable(lazy(() => import('views/others/Suscription')))
+const OtherSuscription = Loadable(lazy(() => import('views/others/Suscription')));
 // sample page routing
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
+// Función que verifica si el usuario está autenticado
+const isAuthenticated = () => {
+  const token = localStorage.getItem('token');
+  // Devuelve true si el token está presente
+  return token !== null;
+};
+
 const MainRoutes = {
   path: '/',
-  element: <MainLayout />,
+  element: isAuthenticated() ? <MainLayout /> : <Navigate to="/pages/login/login3" />,
   children: [
     {
       path: '/',
-      element: <DashboardDefault />
+      element: isAuthenticated() ? <DashboardDefault /> : <Navigate to="/pages/login/login3" />
     },
     {
       path: 'dashboard',
       children: [
         {
           path: 'default',
-          element: <DashboardDefault />
+          element: isAuthenticated() ? <DashboardDefault /> : <Navigate to="/pages/login/login3" />
         }
       ]
     },
@@ -47,7 +54,7 @@ const MainRoutes = {
       children: [
         {
           path: 'util-typography',
-          element: <UtilsTypography />
+          element: isAuthenticated() ? <UtilsTypography /> : <Navigate to="/pages/login/login3" />
         }
       ]
     },
@@ -56,7 +63,7 @@ const MainRoutes = {
       children: [
         {
           path: 'util-color',
-          element: <UtilsColor />
+          element: isAuthenticated() ? <UtilsColor /> : <Navigate to="/pages/login/login3" />
         }
       ]
     },
@@ -65,7 +72,7 @@ const MainRoutes = {
       children: [
         {
           path: 'util-shadow',
-          element: <UtilsShadow />
+          element: isAuthenticated() ? <UtilsShadow /> : <Navigate to="/pages/login/login3" />
         }
       ]
     },
@@ -74,7 +81,7 @@ const MainRoutes = {
       children: [
         {
           path: 'tabler-icons',
-          element: <UtilsTablerIcons />
+          element: isAuthenticated() ? <UtilsTablerIcons /> : <Navigate to="/pages/login/login3" />
         }
       ]
     },
@@ -83,7 +90,7 @@ const MainRoutes = {
       children: [
         {
           path: 'material-icons',
-          element: <UtilsMaterialIcons />
+          element: isAuthenticated() ? <UtilsMaterialIcons /> : <Navigate to="/pages/login/login3" />
         }
       ]
     },
@@ -92,7 +99,7 @@ const MainRoutes = {
       children: [
         {
           path: 'add-patient',
-          element: <OtherAddPatient />
+          element: isAuthenticated() ? <OtherAddPatient /> : <Navigate to="/pages/login/login3" />
         }
       ]
     },
@@ -101,7 +108,7 @@ const MainRoutes = {
       children: [
         {
           path: 'conectar-dispositivo',
-          element: <OtherSp32 />
+          element: isAuthenticated() ? <OtherSp32 /> : <Navigate to="/pages/login/login3" />
         }
       ]
     },
@@ -110,21 +117,19 @@ const MainRoutes = {
       children: [
         {
           path: 'suscription',
-          element: <OtherSuscription />
+          element: isAuthenticated() ? <OtherSuscription /> : <Navigate to="/pages/login/login3" />
         }
       ]
     },
     {
       path: 'sample-page',
-      element: <SamplePage />
+      element: isAuthenticated() ? <SamplePage /> : <Navigate to="/pages/login/login3" />
     },
     {
-      path: "/pages/historial/historial",
-      element: <HistorialP/>
+      path: '/pages/historial/historial',
+      element: isAuthenticated() ? <HistorialP /> : <Navigate to="/pages/login/login3" />
     }
-    
-  ],
-  
+  ]
 };
 
 export default MainRoutes;

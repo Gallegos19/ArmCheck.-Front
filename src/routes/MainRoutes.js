@@ -27,7 +27,7 @@ const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
 // Función que verifica si el usuario está autenticado
 const isAuthenticated = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('data');
   // Devuelve true si el token está presente
   return token !== null;
 };

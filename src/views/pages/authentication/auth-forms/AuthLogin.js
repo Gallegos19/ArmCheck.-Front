@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+
+
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -37,6 +39,9 @@ import Google from 'assets/images/icons/social-google.svg';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
+
+
+
 const FirebaseLogin = ({ ...others }) => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -59,26 +64,36 @@ const FirebaseLogin = ({ ...others }) => {
     event.preventDefault();
   };
 
-  const handleLogin = (values) => {
-    console.log(values)
-    // Verificar si todos los campos obligatorios están llenos
-    if (!values.email || !values.password) {
+  
+  const handleLogin = async (values) => {
+    console.log(values);
+    try {
+      const response = await fetch('http://localhost:3001/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password
+        })
+      });
+      const data = await response.json();
+      console.log('Respuesta del servidor:', data);
+  
+      if (data.success) {
+        setBandera(false);
+        navigate('/dashboard/default');
+      } else {
+        setBandera(true);
+        console.error('Error al iniciar sesión:', data.message);
+      }
+    } catch (error) {
       setBandera(true);
-      console.error("Todos los campos son obligatorios");
-      return;
+      console.error('Error al iniciar sesión:', error.message);
     }
+  };
   
-    // Verificar si el checkbox de acuerdo con los términos y condiciones está marcado
-    if (!checked) {
-      setBandera(true)
-      console.error("Debe aceptar los términos y condiciones");
-      return;
-    }
-  
-    console.log("Registrado");
-    setBandera(false)
-    navigate('/dashboard/default');
-  }
 
 
   return (

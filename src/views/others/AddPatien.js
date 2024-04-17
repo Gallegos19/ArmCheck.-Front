@@ -1,70 +1,70 @@
 import { useState } from 'react';
-//import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-// project imports
 import MainCard from 'ui-component/cards/MainCard';
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Button,
-  //Checkbox,
-  //Divider,
   Select,
   FormControl,
-  //FormControlLabel,
   FormHelperText,
-  //Grid,
-  //IconButton,
-  //InputAdornment,
-  //FormControlLabel,
-  //Checkbox,
   MenuItem,
   InputLabel,
   OutlinedInput,
-  //Stack,
   Typography,
   useMediaQuery
 } from '@mui/material';
 
-// project imports
-import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-// assets
-//import Visibility from '@mui/icons-material/Visibility';
-//import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const AddPatient = ({ ...others }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const scriptedRef = useScriptRef();
+
   const [bandera, setBandera] = useState(false);
-  //const [hasChronicDisease, setHasChronicDisease] = useState(false);
 
-  // ==============================|| SAMPLE PAGE ||============================== //
-  const handleLogin = (values) => {
+  const handleSubmit = async (values, { setSubmitting }) => {
     console.log(values);
-    // Verificar si todos los campos obligatorios están llenos
-    if (!values.nombre || !values.apellido || !values.edad || !values.genero || !values.altura || !values.peso) {
+    try {
+      const response = await fetch('http://localhost:3001/api/paciente', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id_especialista: values.id_especialista,
+          nombres: values.nombres,
+          apellidos: values.apellidos,
+          edad: values.edad,
+          altura: values.altura,
+          peso: values.peso,
+          genero: values.genero
+        })
+      });
+      if (response.ok) { // Verifica si la respuesta es exitosa (código de estado 200-299)
+        const data = await response.json();
+        console.log('Respuesta del servidor:', data);
+        // Aquí puedes realizar la redirección
+        navigate('/dashboard/default');
+      } else {
+        // Si la respuesta no es exitosa, lanza un error
+        throw new Error('La solicitud no fue exitosa');
+      }
+    } catch (error) {
       setBandera(true);
-      console.error('Todos los campos son obligatorios');
-      return;
+      console.error('Error al iniciar sesión:', error.message);
+      console.log('Registrado');
+      setBandera(false);
+      // No redirigir aquí
+    } finally {
+      setSubmitting(false);
     }
-
-    // Verificar si el checkbox de acuerdo con los términos y condiciones está marcado
-    if (!checked) {
-      setBandera(true);
-      console.error('Debe aceptar los términos y condiciones');
-      return;
-    }
-
-    console.log('Registrado');
-    setBandera(false);
-    navigate('/dashboard/default');
   };
+  
+
   return (
     <>
       <br />
@@ -73,84 +73,62 @@ const AddPatient = ({ ...others }) => {
         <Typography variant="body2">Ingrese los datos del paciente</Typography>
         <Formik
           initialValues={{
-            email: '',
-            password: '',
-            nombre: '',
-            apellido: '',
-            edad: '',
+            id_especialista: 2, // Debes definir el valor inicial adecuado
+            nombres: '',
+            apellidos: '',
             altura: '',
+            edad: '',
             peso: '',
             genero: '',
-            enfermedad: '',
-            descripcion: '',
             submit: null
           }}
           validationSchema={Yup.object().shape({
-            email: Yup.string().email('El correo debe ser valido').max(255).required('Nombre del paciente es requerido'),
-            password: Yup.string().max(255).required('Edad del paciente es requerido'),
-            peso: Yup.number().positive('El peso debe ser un valor positivo').max(255).required('Peso del paciente es requerido'),
+            nombres: Yup.string().max(255).required('Nombre del paciente es requerido'),
+            apellidos: Yup.string().max(255).required('Apellido del paciente es requerido'),
             edad: Yup.number().positive('La edad debe ser un valor positivo').max(255).required('Edad del paciente es requerido'),
             altura: Yup.number().positive('La altura debe ser un valor positivo').max(255).required('Altura del paciente es requerido'),
-            apellido: Yup.string().max(255).required('Apellido del paciente es requerido'),
-            nombre: Yup.string().max(255).required('Nombre del paciente es requerido'),
+            peso: Yup.number().positive('El peso debe ser un valor positivo').max(255).required('Peso del paciente es requerido'),
             genero: Yup.string().required('Género del paciente es requerido'),
-            enfermedad: Yup.string().max(255).required('Enfermedad del paciente es requerido'),
-            descripcion: Yup.string().max(255).required('Enfermedad del paciente es requerido')
           })}
-          onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-            handleLogin(values);
-            try {
-              if (scriptedRef.current) {
-                setStatus({ success: true });
-                setSubmitting(false);
-              }
-            } catch (err) {
-              console.error(err);
-              if (scriptedRef.current) {
-                setStatus({ success: false });
-                setErrors({ submit: err.message });
-                setSubmitting(false);
-              }
-            }
-          }}
+          onSubmit={handleSubmit}
         >
           {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
             <form noValidate onSubmit={handleSubmit} {...others}>
               <div style={{ display: 'flex', flexDirection: 'row', width: '100%', gap: '1%', flexWrap: isSmallScreen ? 'wrap' : 'nowrap' }}>
-                <FormControl fullWidth error={Boolean(touched.nombre && errors.nombre)} sx={{ ...theme.typography.customInput }}>
+                <FormControl fullWidth error={Boolean(touched.nombres && errors.nombres)} sx={{ ...theme.typography.customInput }}>
                   <InputLabel htmlFor="outlined-adornment-nombre">Nombres </InputLabel>
                   <OutlinedInput
                     id="outlined-adornment-nombre"
                     type="text"
-                    value={values.nombre}
-                    name="nombre"
+                    value={values.nombres}
+                    name="nombres" // Cambio aquí
                     onBlur={handleBlur}
                     onChange={handleChange}
                     label="Nombre "
                     inputProps={{}}
                   />
-                  {touched.nombre && errors.nombre && (
+                  {touched.nombres && errors.nombres && (
                     <FormHelperText error id="standard-weight-helper-text-nombre">
-                      {errors.nombre}
+                      {errors.nombres}
                     </FormHelperText>
                   )}
                 </FormControl>
 
-                <FormControl fullWidth error={Boolean(touched.apellido && errors.apellido)} sx={{ ...theme.typography.customInput }}>
+                <FormControl fullWidth error={Boolean(touched.apellidos && errors.apellidos)} sx={{ ...theme.typography.customInput }}>
                   <InputLabel htmlFor="outlined-adornment-apellidos">Apellidos </InputLabel>
                   <OutlinedInput
                     id="outlined-adornment-apellidos"
                     type="text"
-                    value={values.apellido}
-                    name="apellido"
+                    value={values.apellidos}
+                    name="apellidos" // Cambio aquí
                     onBlur={handleBlur}
                     onChange={handleChange}
                     label="Apellidos "
                     inputProps={{}}
                   />
-                  {touched.apellido && errors.apellido && (
+                  {touched.apellidos && errors.apellidos && (
                     <FormHelperText error id="standard-weight-helper-text-apellidos">
-                      {errors.apellido}
+                      {errors.apellidos}
                     </FormHelperText>
                   )}
                 </FormControl>
@@ -301,7 +279,6 @@ const AddPatient = ({ ...others }) => {
                     <Button
                       disableElevation
                       disabled={isSubmitting}
-                      onClick={handleLogin}
                       fullWidth
                       size="large"
                       type="submit"

@@ -38,21 +38,48 @@ const CardButton = styled(Button)(({ theme }) => ({
 }));
 
 const TotalIncomeLightCard = ({ isLoading }) => {
-  const [patients] = useState([
-    { nombre: 'Gerson Daniel', apellidos: 'Garcia Dominguez', edad: 20, altura: 1.75 },
-    { nombre: 'Juan', apellidos: 'Perez', edad: 25, altura: 1.8 },
-    { nombre: 'María', apellidos: 'Gonzalez', edad: 30, altura: 1.65 },
-    { nombre: 'Carlos', apellidos: 'Martinez', edad: 35, altura: 1.7 },
-    { nombre: 'Laura', apellidos: 'Lopez', edad: 40, altura: 1.6 },
-    { nombre: 'Pedro', apellidos: 'Sanchez', edad: 45, altura: 1.85 },
-    { nombre: 'Carlos', apellidos: 'Ramirez', edad: 50, altura: 1.75 },
-    { nombre: 'Laura', apellidos: 'Hernandez', edad: 55, altura: 1.68 },
-    { nombre: 'Pedro', apellidos: 'Gutierrez', edad: 60, altura: 1.9 },
-  ]);
-
   const [showEditCard, setShowEditCard] = useState(false);  // Estado para controlar la visibilidad de la tarjeta de edición
+  const [patientsData, setPatientsData] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);// Estado para almacenar el paciente seleccionado para editar
   const [cardsPerRow, setCardsPerRow] = useState(3);
+  
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/paciente', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Error al obtener los datos de los pacientes');
+      }
+      const data = await response.json();
+      console.log('Respuesta del servidor:', data);
+      // Actualiza el estado con los datos recibidos
+      setPatientsData(data);
+    } catch (error) {
+      console.error('Error al obtener los datos de los pacientes:', error.message);
+    }
+  };
+  
+
+
+  
+  
+  // const [patients] = useState([
+  //   { nombre: 'Gerson Daniel', apellidos: 'Garcia Dominguez', edad: 20, altura: 1.75, peso:30, genero:'hombre' },
+  //   { nombre: 'Juan', apellidos: 'Perez', edad: 25, altura: 1.8, peso:30, genero:'hombre'},
+  //   { nombre: 'María', apellidos: 'Gonzalez', edad: 30, altura: 1.65, peso:30, genero:'hombre' },
+  //   { nombre: 'Carlos', apellidos: 'Martinez', edad: 35, altura: 1.7, peso:30, genero:'hombre' },
+  //   { nombre: 'Laura', apellidos: 'Lopez', edad: 40, altura: 1.6, peso:30, genero:'hombre' },
+  //   { nombre: 'Pedro', apellidos: 'Sanchez', edad: 45, altura: 1.85, peso:30, genero:'hombre' },
+  //   { nombre: 'Carlos', apellidos: 'Ramirez', edad: 50, altura: 1.75, peso:30, genero:'hombre' },
+  //   { nombre: 'Laura', apellidos: 'Hernandez', edad: 55, altura: 1.68, peso:30, genero:'hombre' },
+  //   { nombre: 'Pedro', apellidos: 'Gutierrez', edad: 60, altura: 1.9, peso:30, genero:'hombre' },
+  // ]);
+
+ 
 
   const handleCardClick = (patient) => {
     setSelectedPatient(patient);
@@ -103,7 +130,14 @@ const TotalIncomeLightCard = ({ isLoading }) => {
     }, []);
   };
 
-  const patientGroups = chunkArray(patients, cardsPerRow);
+  // Llama a fetchData para obtener los datos de los pacientes al cargar el componente
+  useEffect(() => {
+    fetchData(); // Asegúrate de pasar los valores correctos si es necesario
+  }, []);
+
+  // Remueve la llamada a handPaciente y usa directamente patientsData
+  const patientGroups = chunkArray(patientsData, cardsPerRow);
+
 //----------------------------------------------------------------------------------------------------------------
   return (
     <>
@@ -129,7 +163,7 @@ const TotalIncomeLightCard = ({ isLoading }) => {
                     <List sx={{ py: 2 }}>
                       <ListItem key={patientIndex} disableGutters>
                         <Typography variant="body1">
-                          <strong>Nombre:</strong> {patient.nombre}
+                          <strong>Nombre:</strong> {patient.nombres}
                         </Typography>
                       </ListItem>
                       <ListItem key={patientIndex} disableGutters>
@@ -145,6 +179,16 @@ const TotalIncomeLightCard = ({ isLoading }) => {
                       <ListItem key={patientIndex} disableGutters>
                         <Typography variant="body1">
                           <strong>Altura:</strong> {patient.altura}
+                        </Typography>
+                      </ListItem>
+                      <ListItem key={patientIndex} disableGutters>
+                        <Typography variant="body1">
+                          <strong>Peso:</strong> {patient.peso}
+                        </Typography>
+                      </ListItem>
+                      <ListItem key={patientIndex} disableGutters>
+                        <Typography variant="body1">
+                          <strong>Genero:</strong> {patient.genero}
                         </Typography>
                       </ListItem>
                     </List>

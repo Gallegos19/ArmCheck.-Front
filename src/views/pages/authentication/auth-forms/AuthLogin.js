@@ -18,9 +18,9 @@ import {
   OutlinedInput,
   Stack,
   Typography,
-  useMediaQuery
+  useMediaQuery,
+  Alert
 } from '@mui/material';
-
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -45,6 +45,7 @@ const FirebaseLogin = ({ ...others }) => {
   const customization = useSelector((state) => state.customization);
   const [checked, setChecked] = useState(true);
   const [bandera, setBandera] = useState(false);
+  const [sesion, setSesion] = useState(true);
 
   const googleHandler = async () => {
     console.error('Login');
@@ -59,31 +60,54 @@ const FirebaseLogin = ({ ...others }) => {
     event.preventDefault();
   };
 
-  const handleLogin = (values) => {
-    console.log(values)
+  const handleLogin = async (values) => {
     // Verificar si todos los campos obligatorios están llenos
     if (!values.email || !values.password) {
       setBandera(true);
-      console.error("Todos los campos son obligatorios");
+      console.error('Todos los campos son obligatorios');
       return;
     }
-  
+
     // Verificar si el checkbox de acuerdo con los términos y condiciones está marcado
     if (!checked) {
-      setBandera(true)
-      console.error("Debe aceptar los términos y condiciones");
+      setBandera(true);
+      console.error('Debe aceptar los términos y condiciones');
       return;
     }
-  
-    console.log("Registrado");
-    setBandera(false)
-    navigate('/dashboard/default');
-  }
+    setBandera(false);
+    // Configurar el objeto user correctamente
+    const user = {
+      correo: values.email,
+      contrasena: values.password
+    };
 
+    try {
+      const response = await fetch('http://localhost:3004/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(user),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) {
+        setSesion(false);
+        return;
+      }
+
+      // Leer y almacenar el token de la respuesta
+      const data = await response.json();
+      localStorage.setItem('data', JSON.stringify(data));
+      setSesion(true);
+      navigate('/dashboard/default');
+    } catch {
+      console.log('Error al iniciar sesión:');
+    }
+  };
 
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
+        {!sesion && <Alert severity="error">Correo y/o contraseña incorrectos</Alert>};
         <Grid item xs={12}>
           <AnimateButton>
             <Button
@@ -153,7 +177,7 @@ const FirebaseLogin = ({ ...others }) => {
           password: Yup.string().max(255).required('Contraseña requerida')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          handleLogin(values)
+          handleLogin(values);
           try {
             if (scriptedRef.current) {
               setStatus({ success: true });
@@ -229,7 +253,7 @@ const FirebaseLogin = ({ ...others }) => {
                 label="Recordar contraseña"
               />
               <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
-              ¿Olvidaste la contraseña?
+                ¿Olvidaste la contraseña?
               </Typography>
             </Stack>
             {errors.submit && (
@@ -237,13 +261,11 @@ const FirebaseLogin = ({ ...others }) => {
                 <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
             )}
-            {bandera &&(
-              <FormHelperText error>Todos los campos son requeridos</FormHelperText>
-            )}
+            {bandera && <FormHelperText error>Todos los campos son requeridos</FormHelperText>}
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} onClick={handleLogin} fullWidth size="large" type="submit" variant="contained" color="secondary">
-                Iniciar Sesión
+                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
+                  Iniciar Sesión
                 </Button>
               </AnimateButton>
             </Box>

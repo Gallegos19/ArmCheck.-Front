@@ -1,9 +1,11 @@
+// En esta seccion te manda a una pagina pero con los elementos del inicio como el nav y el menu
+
 import { lazy } from 'react';
 
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
-
+import HistorialP from 'views/pages/authentication/historial/historial';
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
@@ -115,8 +117,14 @@ const MainRoutes = {
     {
       path: 'sample-page',
       element: <SamplePage />
+    },
+    {
+      path: "/pages/historial/historial",
+      element: <HistorialP/>
     }
-  ]
+    
+  ],
+  
 };
 
 export default MainRoutes;

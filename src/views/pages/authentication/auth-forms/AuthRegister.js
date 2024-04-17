@@ -69,10 +69,10 @@ const FirebaseRegister = ({ ...others }) => {
     setLevel(strengthColor(temp));
   };
 
-  const handleRegister = (values) => {
+  const handleRegister = async (values) => {
     console.log(values);
     // Verificar si todos los campos obligatorios están llenos
-    if (!values.email || !values.password || !values.fname || !values.lname) {
+    if (!values.email || !values.password || !values.fname || !values.lname || !values.lespecialidad) {
       setBandera(true);
       console.error('Todos los campos son obligatorios');
       return;
@@ -84,10 +84,33 @@ const FirebaseRegister = ({ ...others }) => {
       console.error('Debe aceptar los términos y condiciones');
       return;
     }
+    const user = {
+      correo: values.email,
+      contrasena: values.password,
+      nombre: values.fname,
+      apellido: values.lname,
+      especialidad: values.lespecialidad
+    };
 
-    console.log('Registrado');
-    setBandera(false);
-    navigate('/pages/login/login3');
+    try {
+      const response = await fetch('http://localhost:3004/api/auth/register', {
+        method: 'POST',
+        body: JSON.stringify(user),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) {
+        console.log('Error al crear usuario' + response.message);
+        return;
+      }
+
+      // Leer y almacenar el token de la respuesta
+      navigate('/pages/login/login3');
+      setBandera(false);
+    } catch {
+      console.log('Error al iniciar sesión:');
+    }
   };
 
   useEffect(() => {

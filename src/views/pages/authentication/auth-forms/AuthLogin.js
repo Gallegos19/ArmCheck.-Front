@@ -82,7 +82,7 @@ const FirebaseLogin = ({ ...others }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:3004/api/auth/login', {
+      const response = await fetch('http://localhost:3001/api/auth/login', {
         method: 'POST',
         body: JSON.stringify(user),
         headers: {

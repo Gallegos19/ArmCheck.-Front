@@ -9,7 +9,7 @@ const Suscription = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [paymentError, setPaymentError] = useState(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [membershipActive, setMembershipActive] = useState(false); 
+  const [membershipActive, setMembershipActive] = useState(false);
 
   useEffect(() => {
     const isMembershipActive = localStorage.getItem('membershipActive');
@@ -77,7 +77,6 @@ const Suscription = () => {
       setMembershipActive(true);
       console.log('Pago exitoso:', responseData);
       localStorage.setItem('membershipActive', 'true');
-      
     } catch (error) {
       setPaymentError(error.message);
       console.error('Error durante el pago:', error);

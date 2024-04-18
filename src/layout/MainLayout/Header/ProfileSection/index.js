@@ -61,7 +61,7 @@ const ProfileSection = () => {
       const especialistaEncontrado = data.find((especialista) => especialista.id_especialista === id);
       if (especialistaEncontrado) {
         setEspecialistaNombre(especialistaEncontrado.nombre);
-        setEspecialistaCargo(especialistaEncontrado.especialidad)
+        setEspecialistaCargo(especialistaEncontrado.especialidad);
       }
     } catch (error) {
       console.error('Error fetching data:', error);

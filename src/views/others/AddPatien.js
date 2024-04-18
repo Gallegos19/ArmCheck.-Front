@@ -44,7 +44,8 @@ const AddPatient = ({ ...others }) => {
           genero: values.genero
         })
       });
-      if (response.ok) { // Verifica si la respuesta es exitosa (código de estado 200-299)
+      if (response.ok) {
+        // Verifica si la respuesta es exitosa (código de estado 200-299)
         const data = await response.json();
         console.log('Respuesta del servidor:', data);
         // Aquí puedes realizar la redirección
@@ -63,7 +64,6 @@ const AddPatient = ({ ...others }) => {
       setSubmitting(false);
     }
   };
-  
 
   return (
     <>
@@ -88,7 +88,7 @@ const AddPatient = ({ ...others }) => {
             edad: Yup.number().positive('La edad debe ser un valor positivo').max(255).required('Edad del paciente es requerido'),
             altura: Yup.number().positive('La altura debe ser un valor positivo').max(255).required('Altura del paciente es requerido'),
             peso: Yup.number().positive('El peso debe ser un valor positivo').max(255).required('Peso del paciente es requerido'),
-            genero: Yup.string().required('Género del paciente es requerido'),
+            genero: Yup.string().required('Género del paciente es requerido')
           })}
           onSubmit={handleSubmit}
         >

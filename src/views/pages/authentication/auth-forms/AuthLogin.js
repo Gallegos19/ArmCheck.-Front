@@ -20,9 +20,9 @@ import {
   OutlinedInput,
   Stack,
   Typography,
-  useMediaQuery
+  useMediaQuery,
+  Alert
 } from '@mui/material';
-
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -50,6 +50,7 @@ const FirebaseLogin = ({ ...others }) => {
   const customization = useSelector((state) => state.customization);
   const [checked, setChecked] = useState(true);
   const [bandera, setBandera] = useState(false);
+  const [sesion, setSesion] = useState(true);
 
   const googleHandler = async () => {
     console.error('Login');
@@ -64,41 +65,32 @@ const FirebaseLogin = ({ ...others }) => {
     event.preventDefault();
   };
 
-  
-  const handleLogin = async (values) => {
-    console.log(values);
-    try {
-      const response = await fetch('http://localhost:3001/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: values.email,
-          password: values.password
-        })
-      });
-      const data = await response.json();
-      console.log('Respuesta del servidor:', data);
-  
-      if (data.success) {
-        setBandera(false);
-        navigate('/dashboard/default');
-      } else {
-        setBandera(true);
-        console.error('Error al iniciar sesión:', data.message);
-      }
-    } catch (error) {
+  const handleLogin = (values) => {
+    console.log(values)
+    // Verificar si todos los campos obligatorios están llenos
+    if (!values.email || !values.password) {
       setBandera(true);
-      console.error('Error al iniciar sesión:', error.message);
+      console.error("Todos los campos son obligatorios");
+      return;
     }
-  };
   
+    // Verificar si el checkbox de acuerdo con los términos y condiciones está marcado
+    if (!checked) {
+      setBandera(true)
+      console.error("Debe aceptar los términos y condiciones");
+      return;
+    }
+  
+    console.log("Registrado");
+    setBandera(false)
+    navigate('/dashboard/default');
+  }
 
 
   return (
     <>
       <Grid container direction="column" justifyContent="center" spacing={2}>
+        {!sesion && <Alert severity="error">Correo y/o contraseña incorrectos</Alert>};
         <Grid item xs={12}>
           <AnimateButton>
             <Button
@@ -168,7 +160,7 @@ const FirebaseLogin = ({ ...others }) => {
           password: Yup.string().max(255).required('Contraseña requerida')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          handleLogin(values)
+          handleLogin(values);
           try {
             if (scriptedRef.current) {
               setStatus({ success: true });
@@ -244,7 +236,7 @@ const FirebaseLogin = ({ ...others }) => {
                 label="Recordar contraseña"
               />
               <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
-              ¿Olvidaste la contraseña?
+                ¿Olvidaste la contraseña?
               </Typography>
             </Stack>
             {errors.submit && (
@@ -252,13 +244,11 @@ const FirebaseLogin = ({ ...others }) => {
                 <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
             )}
-            {bandera &&(
-              <FormHelperText error>Todos los campos son requeridos</FormHelperText>
-            )}
+            {bandera && <FormHelperText error>Todos los campos son requeridos</FormHelperText>}
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} onClick={handleLogin} fullWidth size="large" type="submit" variant="contained" color="secondary">
-                Iniciar Sesión
+                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
+                  Iniciar Sesión
                 </Button>
               </AnimateButton>
             </Box>

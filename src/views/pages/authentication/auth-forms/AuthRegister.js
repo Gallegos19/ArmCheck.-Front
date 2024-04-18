@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 // material-ui
@@ -69,28 +69,49 @@ const FirebaseRegister = ({ ...others }) => {
     setLevel(strengthColor(temp));
   };
 
-  const handleRegister = (values) => {
-    console.log(values)
+  const handleRegister = async (values) => {
+    console.log(values);
     // Verificar si todos los campos obligatorios están llenos
-    if (!values.email || !values.password || !values.fname || !values.lname) {
+    if (!values.email || !values.password || !values.fname || !values.lname || !values.lespecialidad) {
       setBandera(true);
-      console.error("Todos los campos son obligatorios");
+      console.error('Todos los campos son obligatorios');
       return;
     }
-  
+
     // Verificar si el checkbox de acuerdo con los términos y condiciones está marcado
     if (!checked) {
-      setBandera(true)
-      console.error("Debe aceptar los términos y condiciones");
+      setBandera(true);
+      console.error('Debe aceptar los términos y condiciones');
       return;
     }
-  
-    console.log("Registrado");
-    setBandera(false)
-    navigate('/pages/login/login3');
-    
+    const user = {
+      correo: values.email,
+      contrasena: values.password,
+      nombre: values.fname,
+      apellido: values.lname,
+      especialidad: values.lespecialidad
+    };
+
+    try {
+      const response = await fetch('http://localhost:3004/api/auth/register', {
+        method: 'POST',
+        body: JSON.stringify(user),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) {
+        console.log('Error al crear usuario' + response.message);
+        return;
+      }
+
+      // Leer y almacenar el token de la respuesta
+      navigate('/pages/login/login3');
+      setBandera(false);
+    } catch {
+      console.log('Error al iniciar sesión:');
+    }
   };
-  
 
   useEffect(() => {
     changePassword('123456');
@@ -150,69 +171,71 @@ const FirebaseRegister = ({ ...others }) => {
       </Grid>
 
       <Formik
-  initialValues={{
-    email: '',
-    password: '',
-    fname: '', // Agregado: estado para el campo de nombre
-    lname: '', // Agregado: estado para el campo de apellido
-    submit: null
-  }}
-  validationSchema={Yup.object().shape({
-    email: Yup.string().email('El correo debe ser valido').max(255).required('Correo requerido'),
-    password: Yup.string().max(255).required('Contraseña requerida'),
-    fname: Yup.string().max(255).required('Nombre requerido'), // Agregado: validación para el campo de nombre
-    lname: Yup.string().max(255).required('Apellido requerido') // Agregado: validación para el campo de apellido
-  })}
-  onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-    handleRegister(values);
-    try {
-      if (scriptedRef.current) {
-        setStatus({ success: true });
-        setSubmitting(false);
-      }
-    } catch (err) {
-      console.error(err);
-      if (scriptedRef.current) {
-        setStatus({ success: false });
-        setErrors({ submit: err.message });
-        setSubmitting(false);
-      }
-    }
-  }}
->
-  {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-    <form noValidate onSubmit={handleSubmit} {...others}>
-      <Grid container spacing={matchDownSM ? 0 : 1}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Nombres"
-            margin="normal"
-            name="fname"
-            type="text"
-            value={values.fname} // Actualiza el valor del campo de nombre
-            onBlur={handleBlur}
-            onChange={handleChange}
-            error={Boolean(touched.fname && errors.fname)} // Agregado: manejo de errores para el campo de nombre
-            helperText={touched.fname && errors.fname} // Agregado: mensaje de error para el campo de nombre
-            sx={{ ...theme.typography.customInput }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Apellidos"
-            margin="normal"
-            name="lname"
-            type="text"
-            value={values.lname} // Actualiza el valor del campo de apellido
-            onBlur={handleBlur}
-            onChange={handleChange}
-            error={Boolean(touched.lname && errors.lname)} // Agregado: manejo de errores para el campo de apellido
-            helperText={touched.lname && errors.lname} // Agregado: mensaje de error para el campo de apellido
-            sx={{ ...theme.typography.customInput }}
-          />
-        </Grid>
+        initialValues={{
+          email: '',
+          password: '',
+          fname: '', // Agregado: estado para el campo de nombre
+          lname: '', // Agregado: estado para el campo de apellido
+          submit: null,
+          lespecialidad: ''
+        }}
+        validationSchema={Yup.object().shape({
+          email: Yup.string().email('El correo debe ser valido').max(255).required('Correo requerido'),
+          password: Yup.string().max(255).required('Contraseña requerida'),
+          fname: Yup.string().max(255).required('Nombre requerido'), // Agregado: validación para el campo de nombre
+          lname: Yup.string().max(255).required('Apellido requerido'), // Agregado: validación para el campo de apellido
+          lespecialidad: Yup.string().max(255).required('Especialidad requerido') // Agregado: validación para el campo de especialidad
+        })}
+        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+          handleRegister(values);
+          try {
+            if (scriptedRef.current) {
+              setStatus({ success: true });
+              setSubmitting(false);
+            }
+          } catch (err) {
+            console.error(err);
+            if (scriptedRef.current) {
+              setStatus({ success: false });
+              setErrors({ submit: err.message });
+              setSubmitting(false);
+            }
+          }
+        }}
+      >
+        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+          <form noValidate onSubmit={handleSubmit} {...others}>
+            <Grid container spacing={matchDownSM ? 0 : 1}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Nombres"
+                  margin="normal"
+                  name="fname"
+                  type="text"
+                  value={values.fname} // Actualiza el valor del campo de nombre
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  error={Boolean(touched.fname && errors.fname)} // Agregado: manejo de errores para el campo de nombre
+                  helperText={touched.fname && errors.fname} // Agregado: mensaje de error para el campo de nombre
+                  sx={{ ...theme.typography.customInput }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Apellidos"
+                  margin="normal"
+                  name="lname"
+                  type="text"
+                  value={values.lname} // Actualiza el valor del campo de apellido
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  error={Boolean(touched.lname && errors.lname)} // Agregado: manejo de errores para el campo de apellido
+                  helperText={touched.lname && errors.lname} // Agregado: mensaje de error para el campo de apellido
+                  sx={{ ...theme.typography.customInput }}
+                />
+              </Grid>
             </Grid>
             <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
               <InputLabel htmlFor="outlined-adornment-email-register">Correo</InputLabel>
@@ -284,6 +307,21 @@ const FirebaseRegister = ({ ...others }) => {
               </FormControl>
             )}
 
+            <Grid item xs={12} sm={12}>
+              <TextField
+                fullWidth
+                label="Especialidad"
+                margin="normal"
+                name="lespecialidad"
+                type="text"
+                value={values.lespecialidad} // Actualiza el valor del campo de apellido
+                onBlur={handleBlur}
+                onChange={handleChange}
+                error={Boolean(touched.lespecialidad && errors.lespecialidad)} // Agregado: manejo de errores para el campo de apellido
+                helperText={touched.lespecialidad && errors.lespecialidad} // Agregado: mensaje de error para el campo de apellido
+                sx={{ ...theme.typography.customInput }}
+              />
+            </Grid>
             <Grid container alignItems="center" justifyContent="space-between">
               <Grid item>
                 <FormControlLabel
@@ -292,9 +330,9 @@ const FirebaseRegister = ({ ...others }) => {
                   }
                   label={
                     <Typography variant="subtitle1">
-                       Deacuerdo con los&nbsp;
+                      De acuerdo con los&nbsp;
                       <Typography variant="subtitle1" component={Link} to="#">
-                      Terminos y Condiciones.
+                        Terminos y Condiciones.
                       </Typography>
                     </Typography>
                   }
@@ -306,13 +344,20 @@ const FirebaseRegister = ({ ...others }) => {
                 <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
             )}
-            {bandera &&(
-              <FormHelperText error>Todos los campos son requeridos</FormHelperText>
-            )}
+            {bandera && <FormHelperText error>Todos los campos son requeridos</FormHelperText>}
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} onClick={handleRegister} fullWidth size="large" type="submit" variant="contained" color="secondary">
-                Registrarse
+                <Button
+                  disableElevation
+                  disabled={isSubmitting}
+                  onClick={handleRegister}
+                  fullWidth
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                >
+                  Registrarse
                 </Button>
               </AnimateButton>
             </Box>

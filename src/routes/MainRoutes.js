@@ -6,6 +6,7 @@ import { Navigate } from 'react-router-dom';
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import HistorialP from 'views/pages/authentication/historial/historial';
+
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
@@ -20,6 +21,8 @@ const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons
 const OtherAddPatient = Loadable(lazy(() => import('views/others/AddPatien')));
 const OtherSp32 = Loadable(lazy(() => import('views/others/SP32')));
 const OtherSuscription = Loadable(lazy(() => import('views/others/Suscription')));
+const AdminPage = Loadable(lazy(() => import('views/others/AdminPage')));
+
 // sample page routing
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
@@ -109,6 +112,15 @@ const MainRoutes = {
         {
           path: 'conectar-dispositivo',
           element: isAuthenticated() ? <OtherSp32 /> : <Navigate to="/pages/login/login3" />
+        }
+      ]
+    },
+    {
+      path: 'other',
+      children: [
+        {
+          path: 'page-admin',
+          element: isAuthenticated() ? <AdminPage /> : <Navigate to="/pages/login/login3" />
         }
       ]
     },

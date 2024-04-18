@@ -65,19 +65,6 @@ const TotalIncomeLightCard = ({ isLoading }) => {
   
 
 
-  
-  
-  // const [patients] = useState([
-  //   { nombre: 'Gerson Daniel', apellidos: 'Garcia Dominguez', edad: 20, altura: 1.75, peso:30, genero:'hombre' },
-  //   { nombre: 'Juan', apellidos: 'Perez', edad: 25, altura: 1.8, peso:30, genero:'hombre'},
-  //   { nombre: 'María', apellidos: 'Gonzalez', edad: 30, altura: 1.65, peso:30, genero:'hombre' },
-  //   { nombre: 'Carlos', apellidos: 'Martinez', edad: 35, altura: 1.7, peso:30, genero:'hombre' },
-  //   { nombre: 'Laura', apellidos: 'Lopez', edad: 40, altura: 1.6, peso:30, genero:'hombre' },
-  //   { nombre: 'Pedro', apellidos: 'Sanchez', edad: 45, altura: 1.85, peso:30, genero:'hombre' },
-  //   { nombre: 'Carlos', apellidos: 'Ramirez', edad: 50, altura: 1.75, peso:30, genero:'hombre' },
-  //   { nombre: 'Laura', apellidos: 'Hernandez', edad: 55, altura: 1.68, peso:30, genero:'hombre' },
-  //   { nombre: 'Pedro', apellidos: 'Gutierrez', edad: 60, altura: 1.9, peso:30, genero:'hombre' },
-  // ]);
 
  
 

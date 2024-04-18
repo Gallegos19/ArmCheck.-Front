@@ -1,44 +1,26 @@
-import { useState, useRef, useEffect } from 'react';
-
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-//assets
-import { IconUserCircle,IconLogout,  IconSettings,} from '@tabler/icons';
-// material-ui
+import { IconUserCircle, IconLogout, IconSettings } from '@tabler/icons';
 import { useTheme } from '@mui/material/styles';
 import {
   Avatar,
   Box,
- 
   Chip,
   ClickAwayListener,
   Divider,
-  //Grid,
-  //InputAdornment,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  //OutlinedInput,
   Paper,
   Popper,
   Stack,
-  Typography,
- 
-
+  Typography
 } from '@mui/material';
-
-// third-party
 import PerfectScrollbar from 'react-perfect-scrollbar';
-
-// project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-//import UpgradePlanCard from './UpgradePlanCard';
-// import User1 from 'assets/images/users/user-round.svg';
-
-
-
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -46,16 +28,14 @@ const ProfileSection = () => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
-  //const [value, setValue] = useState('');
-  const selectedIndex = useState(-1);
-  const [open, setOpen] = useState(false);
-  /**
-   * anchorRef is used on different componets and specifying one type leads to other components throwing an error
-   * */
   const anchorRef = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [especialistaNombre, setEspecialistaNombre] = useState('');
+  const [especialistaCargo, setEspecialistaCargo] = useState('');
+
   const handleLogout = async () => {
     console.log('Logout');
-    localStorage.removeItem("data")
+    localStorage.removeItem('data');
     navigate('/pages/login/login3');
   };
 
@@ -66,26 +46,32 @@ const ProfileSection = () => {
     setOpen(false);
   };
 
-  // const handleListItemClick = (event, index, route = '') => {
-  //   setSelectedIndex(index);
-  //   handleClose(event);
-
-  //   if (route && route !== '') {
-  //     navigate(route);
-  //   }
-  // };
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const prevOpen = useRef(open);
-  useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current.focus();
+  const fetchData = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3004/api/especialistas/`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const data = await response.json();
+      // Buscar el especialista cuyo ID coincida con el ID almacenado en el localStorage
+      const especialistaEncontrado = data.find((especialista) => especialista.id_especialista === id);
+      if (especialistaEncontrado) {
+        setEspecialistaNombre(especialistaEncontrado.nombre);
+        setEspecialistaCargo(especialistaEncontrado.especialidad)
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
+  };
 
-    prevOpen.current = open;
-  }, [open]);
+  useEffect(() => {
+    const idEspecialista = JSON.parse(localStorage.getItem('data')).id_especialista;
+    fetchData(idEspecialista);
+  }, []);
 
   return (
     <>
@@ -160,57 +146,14 @@ const ProfileSection = () => {
                       <Stack direction="row" spacing={0.2} alignItems="center">
                         <Typography variant="h4">Bienvenido,</Typography>
                         <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                          Johne Doe
+                          {especialistaNombre}
                         </Typography>
                       </Stack>
-                      <Typography variant="subtitle2">Especialista</Typography>
+                      <Typography variant="subtitle2">{especialistaCargo}</Typography>
                     </Stack>
                   </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 1 }}>
-                      {/*<UpgradePlanCard />*/}
-                      {/* <Card
-                        sx={{
-                          bgcolor: theme.palette.primary.light,
-                          my: 2
-                        }}
-                      >
-                        <CardContent>
-                          <Grid container spacing={3} direction="column">
-                            <Grid item>
-                              <Grid item container alignItems="center" justifyContent="space-between">
-                                <Grid item>
-                                  <Typography variant="subtitle1">Start DND Mode</Typography>
-                                </Grid>
-                                <Grid item>
-                                  <Switch
-                                    color="primary"
-                                    checked={sdm}
-                                    onChange={(e) => setSdm(e.target.checked)}
-                                    name="sdm"
-                                    size="small"
-                                  />
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                            <Grid item>
-                              <Grid item container alignItems="center" justifyContent="space-between">
-                                <Grid item>
-                                  <Typography variant="subtitle1">Allow Notifications</Typography>
-                                </Grid>
-                                <Grid item>
-                                  <Switch
-                                    checked={notification}
-                                    onChange={(e) => setNotification(e.target.checked)}
-                                    name="sdm"
-                                    size="small"
-                                  />
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                      </CardContent>
-                      </Card> */}
                       <Divider />
                       <List
                         component="nav"
@@ -228,49 +171,7 @@ const ProfileSection = () => {
                           }
                         }}
                       >
-                        {/* <ListItemButton
-                          sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={selectedIndex === 0}
-                          onClick={(event) => handleListItemClick(event, 0, '#')}
-                        >
-                          <ListItemIcon>
-                            <IconSettings stroke={1.5} size="1.3rem" />
-                          </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
-                        </ListItemButton> */}
-                        {/* <ListItemButton
-                          sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={selectedIndex === 1}
-                          onClick={(event) => handleListItemClick(event, 1, '#')}
-                        >
-                          <ListItemIcon>
-                            <IconUser stroke={1.5} size="1.3rem" />
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={
-                              <Grid container spacing={1} justifyContent="space-between">
-                                <Grid item>
-                                  <Typography variant="body2">Social Profile</Typography>
-                                </Grid>
-                                <Grid item>
-                                  <Chip
-                                    label="02"
-                                    size="small"
-                                    sx={{
-                                      bgcolor: theme.palette.warning.dark,
-                                      color: theme.palette.background.default
-                                    }}
-                                  />
-                                </Grid>
-                              </Grid>
-                            }
-                          />
-                        </ListItemButton> */}
-                        <ListItemButton
-                          sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={selectedIndex === 4}
-                          onClick={handleLogout}
-                        >
+                        <ListItemButton sx={{ borderRadius: `${customization.borderRadius}px` }} onClick={handleLogout}>
                           <ListItemIcon>
                             <IconLogout stroke={1.5} size="1.3rem" />
                           </ListItemIcon>

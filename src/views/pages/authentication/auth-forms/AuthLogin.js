@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-
-
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -39,9 +37,6 @@ import Google from 'assets/images/icons/social-google.svg';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
-
-
-
 const FirebaseLogin = ({ ...others }) => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -65,27 +60,49 @@ const FirebaseLogin = ({ ...others }) => {
     event.preventDefault();
   };
 
-  const handleLogin = (values) => {
-    console.log(values)
+  const handleLogin = async (values) => {
     // Verificar si todos los campos obligatorios están llenos
     if (!values.email || !values.password) {
       setBandera(true);
-      console.error("Todos los campos son obligatorios");
+      console.error('Todos los campos son obligatorios');
       return;
     }
-  
+
     // Verificar si el checkbox de acuerdo con los términos y condiciones está marcado
     if (!checked) {
-      setBandera(true)
-      console.error("Debe aceptar los términos y condiciones");
+      setBandera(true);
+      console.error('Debe aceptar los términos y condiciones');
       return;
     }
-  
-    console.log("Registrado");
-    setBandera(false)
-    navigate('/dashboard/default');
-  }
+    setBandera(false);
+    // Configurar el objeto user correctamente
+    const user = {
+      correo: values.email,
+      contrasena: values.password
+    };
 
+    try {
+      const response = await fetch('http://localhost:3001/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(user),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (!response.ok) {
+        setSesion(false);
+        return;
+      }
+
+      // Leer y almacenar el token de la respuesta
+      const data = await response.json();
+      localStorage.setItem('data', JSON.stringify(data));
+      setSesion(true);
+      navigate('/dashboard/default');
+    } catch {
+      console.log('Error al iniciar sesión:');
+    }
+  };
 
   return (
     <>

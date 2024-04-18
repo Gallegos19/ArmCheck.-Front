@@ -45,7 +45,7 @@ const TotalIncomeLightCard = ({ isLoading }) => {
   
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/paciente', {
+      const response = await fetch('http://localhost:3004/api/paciente', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'

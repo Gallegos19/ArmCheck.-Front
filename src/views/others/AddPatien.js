@@ -29,7 +29,7 @@ const AddPatient = ({ ...others }) => {
   const handleSubmit = async (values, { setSubmitting }) => {
     console.log(values);
     try {
-      const response = await fetch('http://localhost:3001/api/paciente', {
+      const response = await fetch('http://localhost:3004/api/paciente', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

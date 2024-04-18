@@ -20,8 +20,8 @@ const CardWrapper = styled(Box)(({ theme, top, left }) => ({
   height: 500,
   '@media (max-width: 600px)': {
     width: 300,
-    height: 700,
-  },
+    height: 700
+  }
 }));
 
 const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
@@ -37,19 +37,19 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
     const { name, value } = e.target;
     setEditedPatient((prevPatient) => ({
       ...prevPatient,
-      [name]: value,
+      [name]: value
     }));
   };
 
   const handleSave = async () => {
     console.log('Guardando cambios...');
     try {
-      const response = await fetch(`http://localhost:3001/api/paciente/${editedPatient.id_persona}`, {
+      const response = await fetch(`http://localhost:3004/api/paciente/${editedPatient.id_persona}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(editedPatient),
+        body: JSON.stringify(editedPatient)
       });
       if (response.ok) {
         // Realiza la redirección o cualquier acción adicional después de guardar los cambios
@@ -73,14 +73,14 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
     const numericValue = !isNaN(value) ? parseFloat(value) : value;
     setEditedPatient((prevPatient) => ({
       ...prevPatient,
-      [name]: numericValue,
+      [name]: numericValue
     }));
   };
 
   const [historial] = useState([
     { id: 'GA32', fecha: '24/24/24' },
     { id: 'GA65', fecha: '24/20/24' },
-    { id: 'GA56', fecha: '24/2/24' },
+    { id: 'GA56', fecha: '24/2/24' }
   ]);
 
   const [cardsHisto] = useState(3);
@@ -90,52 +90,22 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
       <Box>
         <List sx={{ py: 2 }}>
           <ListItem disableGutters>
-            <TextField
-              name="nombres"
-              label="Nombre"
-              value={editedPatient.nombres}
-              onChange={handleChange}
-            />
+            <TextField name="nombres" label="Nombre" value={editedPatient.nombres} onChange={handleChange} />
           </ListItem>
           <ListItem disableGutters>
-            <TextField
-              name="apellidos"
-              label="Apellidos"
-              value={editedPatient.apellidos}
-              onChange={handleChange}
-            />
+            <TextField name="apellidos" label="Apellidos" value={editedPatient.apellidos} onChange={handleChange} />
           </ListItem>
           <ListItem disableGutters>
-            <TextField
-              name="edad"
-              label="Edad"
-              value={editedPatient.edad}
-              onChange={handleInputChange}
-            />
+            <TextField name="edad" label="Edad" value={editedPatient.edad} onChange={handleInputChange} />
           </ListItem>
           <ListItem disableGutters>
-            <TextField
-              name="altura"
-              label="Altura"
-              value={editedPatient.altura}
-              onChange={handleInputChange}
-            />
+            <TextField name="altura" label="Altura" value={editedPatient.altura} onChange={handleInputChange} />
           </ListItem>
           <ListItem disableGutters>
-            <TextField
-              name="peso"
-              label="Peso"
-              value={editedPatient.peso}
-              onChange={handleInputChange}
-            />
+            <TextField name="peso" label="Peso" value={editedPatient.peso} onChange={handleInputChange} />
           </ListItem>
           <ListItem disableGutters>
-            <TextField
-              name="genero"
-              label="Genero"
-              value={editedPatient.genero}
-              onChange={handleChange}
-            />
+            <TextField name="genero" label="Genero" value={editedPatient.genero} onChange={handleChange} />
           </ListItem>
         </List>
         <CardHistorial historial={historial} cardsHisto={cardsHisto} />
@@ -147,7 +117,7 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
             alignItems: 'center',
             gap: '120px',
             bottom: '20px',
-            '@media (max-width: 600px)': { gap: '20px' },
+            '@media (max-width: 600px)': { gap: '20px' }
           }}
         >
           <Button variant="contained" onClick={handleSave}>
@@ -160,13 +130,7 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
             Cancelar
           </Button>
         </Box>
-        {showInput && (
-          <Input
-            placeholder="Ingrese aquí"
-            value={'Tu ID es: ' + editedPatient.nombres}
-            onChange={handleInputChange}
-          />
-        )}
+        {showInput && <Input placeholder="Ingrese aquí" value={'Tu ID es: ' + editedPatient.nombres} onChange={handleInputChange} />}
       </Box>
     </CardWrapper>
   );
@@ -177,7 +141,7 @@ EditPatientCard.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   top: PropTypes.string,
-  left: PropTypes.string,
+  left: PropTypes.string
 };
 
 export default EditPatientCard;

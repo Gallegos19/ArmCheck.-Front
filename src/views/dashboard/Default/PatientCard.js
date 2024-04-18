@@ -19,7 +19,7 @@ const CardButton = styled(Button)(({ theme }) => ({
     background: `linear-gradient(210.04deg, ${theme.palette.warning.dark} 50.94%, rgba(144, 202, 249, 0) 83.49%)`,
     borderRadius: '50%',
     top: -30,
-    right: -180,
+    right: -180
   },
   '&:before': {
     content: '""',
@@ -29,20 +29,20 @@ const CardButton = styled(Button)(({ theme }) => ({
     background: `linear-gradient(40.9deg, ${theme.palette.warning.dark} -14.02%, rgba(144, 202, 249, 0) 70.50%)`,
     borderRadius: '50%',
     top: -160,
-    right: -130,
+    right: -130
   },
   p: 3,
   width: '100%',
   maxWidth: 300,
-  height: 300,
+  height: 300
 }));
 
 const TotalIncomeLightCard = ({ isLoading }) => {
-  const [showEditCard, setShowEditCard] = useState(false);  // Estado para controlar la visibilidad de la tarjeta de edición
+  const [showEditCard, setShowEditCard] = useState(false); // Estado para controlar la visibilidad de la tarjeta de edición
   const [patientsData, setPatientsData] = useState([]);
-  const [selectedPatient, setSelectedPatient] = useState(null);// Estado para almacenar el paciente seleccionado para editar
+  const [selectedPatient, setSelectedPatient] = useState(null); // Estado para almacenar el paciente seleccionado para editar
   const [cardsPerRow, setCardsPerRow] = useState(3);
-  
+
   const fetchData = async () => {
     try {
       const response = await fetch('http://localhost:3004/api/paciente', {
@@ -62,11 +62,6 @@ const TotalIncomeLightCard = ({ isLoading }) => {
       console.error('Error al obtener los datos de los pacientes:', error.message);
     }
   };
-  
-
-
-
- 
 
   const handleCardClick = (patient) => {
     setSelectedPatient(patient);
@@ -86,7 +81,7 @@ const TotalIncomeLightCard = ({ isLoading }) => {
   };
 
   // Para seccionar las cards dependiendo del dispositivo ---------------------------------------------------------
-  
+
   useEffect(() => {
     const updateCardsPerRow = () => {
       // Calcula el número de tarjetas por fila en función del ancho de la ventana
@@ -107,7 +102,7 @@ const TotalIncomeLightCard = ({ isLoading }) => {
 
   //----------------------------------------------------------------------------------------------------------------------
 
-  // Para las secciones 
+  // Para las secciones
   const chunkArray = (arr, size) => {
     return arr.reduce((acc, _, i) => {
       if (i % size === 0) {
@@ -125,25 +120,21 @@ const TotalIncomeLightCard = ({ isLoading }) => {
   // Remueve la llamada a handPaciente y usa directamente patientsData
   const patientGroups = chunkArray(patientsData, cardsPerRow);
 
-//----------------------------------------------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------------------------------
   return (
     <>
       {showEditCard && selectedPatient && (
-        <EditPatientCard
-          patient={selectedPatient}
-          onCancel={handleCancelEdit}
-          onSave={handleSaveChanges}
-        />
+        <EditPatientCard patient={selectedPatient} onCancel={handleCancelEdit} onSave={handleSaveChanges} />
       )}
 
-       {/* Renderiza las tarjetas de pacientes */}
+      {/* Renderiza las tarjetas de pacientes */}
 
       {isLoading ? (
         <TotalIncomeCard />
       ) : (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
           {patientGroups.map((group, index) => (
-            <Box key={index} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '50px' }}>   
+            <Box key={index} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '50px' }}>
               {group.map((patient, patientIndex) => (
                 <CardButton key={patientIndex} onClick={() => handleCardClick(patient)}>
                   <Box sx={{ p: 1 }}>
@@ -191,7 +182,7 @@ const TotalIncomeLightCard = ({ isLoading }) => {
 };
 
 TotalIncomeLightCard.propTypes = {
-  isLoading: PropTypes.bool,
+  isLoading: PropTypes.bool
 };
 
 export default TotalIncomeLightCard;

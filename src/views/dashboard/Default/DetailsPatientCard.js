@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Box, Button, TextField, List, ListItem, Input } from '@mui/material';
+import { Box, Button, TextField, List, ListItem, Input, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CardHistorial from 'ui-component/extended/CardHistorial';
 
@@ -29,39 +29,30 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
   const [showInput, setShowInput] = useState(false);
   const [historial, setHistorial] = useState([]);
   const [idUnico, setIdUnico] = useState('');
+  const [deviceConnected, setDeviceConnected] = useState(true);
 
-  console.log("entre");
-  console.log(editedPatient);
   useEffect(() => {
-    // Actualizar el estado interno si cambia la prop 'patient'
     setEditedPatient({ ...patient });
-    // Obtener el historial del paciente
-    fetchPatientHistory(patient.id_persona); // Aquí corregimos patient.id_persona
+    fetchPatientHistory(patient.id_persona);
   }, [patient]);
-
 
   const fetchPatientHistory = async (patientId) => {
     try {
-      const response = await fetch(`http://localhost:3001/api/paciente/${patientId}`, {
+      const response = await fetch(`http://52.200.243.141:3001/api/paciente/${patientId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
-        },
+        }
       });
-      console.log(response)
       if (!response.ok) {
         throw new Error('Error al obtener el historial del paciente');
       }
       const data = await response.json();
-      console.log(data);
-      // Aquí podrías verificar si los datos están en el formato esperado antes de establecer el historial
       setHistorial(data);
     } catch (error) {
       console.error('Error al obtener el historial del paciente:', error.message);
     }
   };
-
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,9 +63,8 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
   };
 
   const handleSave = async () => {
-    console.log('Guardando cambios...');
     try {
-      const response = await fetch(`http://localhost:3004/api/paciente/${editedPatient.id_persona}`, {
+      const response = await fetch(`http://52.200.243.141:3001/api/paciente/${editedPatient.id_persona}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -82,8 +72,8 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
         body: JSON.stringify(editedPatient)
       });
       if (response.ok) {
-        onSave(editedPatient); // Actualiza el estado del componente padre
-        window.location.reload(); // Recarga la página después de guardar los cambios
+        onSave(editedPatient);
+        window.location.reload();
       } else {
         throw new Error('Error al guardar los cambios');
       }
@@ -94,26 +84,24 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
 
   const handleIdUnicoChange = (e) => {
     const { value } = e.target;
-    console.log("Nuevo valor de idUnico:", value);
     setIdUnico(value);
   };
-  
+
   const handleconsulta = async () => {
-    console.log("Valor de idUnico en handleconsulta:", idUnico);
     try {
-      const response = await fetch('http://localhost:3001/api/consulta', {
+      const response = await fetch('http://52.200.243.141:3001/api/consulta', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           id_unico: idUnico,
-          id_paciente: patient.id_persona,
+          id_paciente: patient.id_persona
         })
       });
-      console.log(response);
       if (response.ok) {
         const data = await response.json();
+        alert("AGREGADO")
         console.log('Respuesta del servidor:', data);
       } else {
         throw new Error('La solicitud no fue exitosa');
@@ -122,16 +110,19 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
       console.error('Error en la solicitud:', error.message);
     }
   };
-  
 
   const handleID_unicoClick = () => {
-    setShowInput(true); // Aquí establecemos showInput en true para mostrar el input
+    const connected = localStorage.getItem('connected');
+    if (connected) {
+      setShowInput(true);
+    } else {
+      setDeviceConnected(false);
+      setShowInput(false);
+    }
   };
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // Convertir el valor a número si el campo es numérico
     const numericValue = !isNaN(value) ? parseFloat(value) : value;
     setEditedPatient((prevPatient) => ({
       ...prevPatient,
@@ -144,6 +135,7 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
   return (
     <CardWrapper top={top} left={left} onClick={(e) => e.stopPropagation()}>
       <Box>
+        {!deviceConnected && <Alert severity="error">Por favor, conecte el dispositivo antes de agregar un análisis.</Alert>}
         <List sx={{ py: 2 }}>
           <ListItem disableGutters>
             <TextField name="nombres" label="Nombre" value={editedPatient.nombres} onChange={handleChange} />
@@ -184,11 +176,7 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
             ID Unico
           </Button>
 
-          <Button
-            type="submit"
-            variant="contained"
-            onClick={handleconsulta}
-          >
+          <Button type="submit" variant="contained" onClick={handleconsulta}>
             Analizar
           </Button>
 
@@ -196,7 +184,7 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
             Cancelar
           </Button>
         </Box>
-        
+
         {showInput && (
           <Input
             placeholder="Ingrese ID Unico aquí"
@@ -206,9 +194,7 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
             label="ID Unico"
             onChange={handleIdUnicoChange}
           />
-        
         )}
-
       </Box>
     </CardWrapper>
   );

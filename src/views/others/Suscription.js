@@ -59,7 +59,7 @@ const Suscription = () => {
         fecha_vencimiento: expiryDate
       };
 
-      const response = await fetch('http://localhost:3003/api/pagos/', {
+      const response = await fetch('http://44.223.193.93:3001/api/pagos/', {
         method: 'POST',
         body: JSON.stringify(payData),
         headers: {

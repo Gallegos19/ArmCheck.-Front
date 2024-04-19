@@ -12,12 +12,14 @@ const AdminPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3004/api/especialistas');
+        const response = await fetch('http://52.200.243.141:3001/api/especialistas');
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
         const data = await response.json();
-        setEspecialistas(data);
+        // Filtrar los especialistas que tengan la especialidad "especialista"
+        const especialistasFiltrados = data.filter((especialista) => especialista.especialidad != 'administrador');
+        setEspecialistas(especialistasFiltrados);
       } catch (error) {
         console.error('Error fetching data:', error);
         setErrorMessage('Error al obtener la lista de especialistas');
@@ -29,7 +31,7 @@ const AdminPage = () => {
 
   const handleDelete = async ({ id, correo }) => {
     try {
-      const response = await fetch(`http://localhost:3004/api/especialistas/${correo}`, {
+      const response = await fetch(`http://52.200.243.141:3001/api/especialistas/${correo}`, {
         method: 'DELETE'
       });
       if (!response.ok) {

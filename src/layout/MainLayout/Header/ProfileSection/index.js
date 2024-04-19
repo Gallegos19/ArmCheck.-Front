@@ -52,7 +52,7 @@ const ProfileSection = () => {
 
   const fetchData = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3004/api/especialistas/`);
+      const response = await fetch(`http://52.200.243.141:3001/api/especialistas/`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }

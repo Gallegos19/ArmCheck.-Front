@@ -93,7 +93,7 @@ const FirebaseRegister = ({ ...others }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:3004/api/auth/register', {
+      const response = await fetch('http://52.200.243.141:3001/api/auth/register', {
         method: 'POST',
         body: JSON.stringify(user),
         headers: {

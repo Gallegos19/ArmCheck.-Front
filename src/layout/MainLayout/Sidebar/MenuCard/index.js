@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 
@@ -82,7 +82,11 @@ const MenuCard = () => {
   const [inputValue, setInputValue] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [connected, setConnected] = useState(false);
-  //const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const isConnected = localStorage.getItem('connected') === 'true';
+    setConnected(isConnected);
+  }, []);
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -90,18 +94,18 @@ const MenuCard = () => {
 
   const handleSubmit = () => {
     if (inputValue.trim() !== '') {
-      const socket = io('http://34.238.54.29:3001'); // Conectar al servidor socket.io
+      const socket = io('http://34.238.54.29:3001');
       setIsValid(true);
       socket.on('connect', () => {
         console.log('Connected to socket.io server');
         setConnected(true);
-        // Aquí se puede agregar cualquier lógica adicional al conectarse al servidor
-        // Por ejemplo, enviar el código de la sala al servidor
+        localStorage.setItem('connected', 'true');
         socket.emit('joinRoom', inputValue);
       });
       socket.on('disconnect', () => {
         console.log('Disconnected from socket.io server');
         setConnected(false);
+        localStorage.setItem('connected', 'false');
         socket.disconnect();
       });
       socket.on('error', (error) => {

@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
-import HistorialP from 'views/pages/authentication/historial/historial';
+
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
@@ -20,6 +20,7 @@ const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons
 const OtherAddPatient = Loadable(lazy(() => import('views/others/AddPatien')));
 const OtherSp32 = Loadable(lazy(() => import('views/others/SP32')));
 const OtherSuscription = Loadable(lazy(() => import('views/others/Suscription')));
+const HistorialP = Loadable(lazy(() => import('views/others/Historial')));
 // sample page routing
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
@@ -103,6 +104,7 @@ const MainRoutes = {
         }
       ]
     },
+    
     {
       path: 'other',
       children: [
@@ -126,9 +128,15 @@ const MainRoutes = {
       element: isAuthenticated() ? <SamplePage /> : <Navigate to="/pages/login/login3" />
     },
     {
-      path: '/pages/historial/historial',
-      element: isAuthenticated() ? <HistorialP /> : <Navigate to="/pages/login/login3" />
+      path: 'other',
+      children: [
+        {
+          path: 'historial',
+          element: isAuthenticated() ? <HistorialP /> : <Navigate to="/other/Historial" />
+        }
+      ]
     }
+   
   ]
 };
 

@@ -93,7 +93,6 @@ const FirebaseLogin = ({ ...others }) => {
         setSesion(false);
         return;
       }
-
       // Leer y almacenar el token de la respuesta
       const data = await response.json();
       localStorage.setItem('data', JSON.stringify(data));
@@ -102,7 +101,11 @@ const FirebaseLogin = ({ ...others }) => {
     } catch {
       console.log('Error al iniciar sesión:');
     }
+
+
+    
   };
+  
 
   return (
     <>

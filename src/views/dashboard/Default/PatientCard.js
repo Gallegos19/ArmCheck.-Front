@@ -45,7 +45,7 @@ const TotalIncomeLightCard = ({ isLoading }) => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:3004/api/paciente', {
+      const response = await fetch('http://localhost:3001/api/paciente', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -156,7 +156,7 @@ const TotalIncomeLightCard = ({ isLoading }) => {
                       </ListItem>
                       <ListItem key={patientIndex} disableGutters>
                         <Typography variant="body1">
-                          <strong>Altura:</strong> {patient.altura}
+                          <strong>Altura:</strong> {parseFloat(patient.altura).toFixed(2)}
                         </Typography>
                       </ListItem>
                       <ListItem key={patientIndex} disableGutters>

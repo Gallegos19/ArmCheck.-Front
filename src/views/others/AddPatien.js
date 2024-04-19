@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Importa useEffect
 import { useNavigate } from 'react-router';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -23,8 +23,20 @@ const AddPatient = ({ ...others }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
+  const [idEspecialista, setIdEspecialista] = useState(null); // Define idEspecialista
   const [bandera, setBandera] = useState(false);
+
+
+  useEffect(() => {
+    const dataString = localStorage.getItem('data');
+    if (dataString) {
+      const data = JSON.parse(dataString);
+      const idEspecialista = data.id_especialista;
+      setIdEspecialista(idEspecialista); // Usa setIdEspecialista para establecer el valor de idEspecialista
+      console.log('ID del especialista establecido correctamente:', idEspecialista);
+    }
+  }, []);
+
 
   const handleSubmit = async (values, { setSubmitting }) => {
     console.log(values);
@@ -35,7 +47,7 @@ const AddPatient = ({ ...others }) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          id_especialista: values.id_especialista,
+          id_especialista: idEspecialista, // Usa idEspecialista aquí,
           nombres: values.nombres,
           apellidos: values.apellidos,
           edad: values.edad,
@@ -48,10 +60,8 @@ const AddPatient = ({ ...others }) => {
         // Verifica si la respuesta es exitosa (código de estado 200-299)
         const data = await response.json();
         console.log('Respuesta del servidor:', data);
-        // Aquí puedes realizar la redirección
         navigate('/dashboard/default');
       } else {
-        // Si la respuesta no es exitosa, lanza un error
         throw new Error('La solicitud no fue exitosa');
       }
     } catch (error) {
@@ -59,7 +69,6 @@ const AddPatient = ({ ...others }) => {
       console.error('Error al iniciar sesión:', error.message);
       console.log('Registrado');
       setBandera(false);
-      // No redirigir aquí
     } finally {
       setSubmitting(false);
     }
@@ -72,8 +81,9 @@ const AddPatient = ({ ...others }) => {
       <MainCard title="Agregar Nuevo Paciente">
         <Typography variant="body2">Ingrese los datos del paciente</Typography>
         <Formik
+
           initialValues={{
-            id_especialista: 2, // Debes definir el valor inicial adecuado
+            id_especialista: idEspecialista,
             nombres: '',
             apellidos: '',
             altura: '',

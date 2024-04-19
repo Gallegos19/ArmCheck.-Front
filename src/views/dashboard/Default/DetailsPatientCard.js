@@ -17,7 +17,7 @@ const CardWrapper = styled(Box)(({ theme, top, left }) => ({
   color: 'black',
   p: 3,
   width: 600,
-  height: 500,
+  height: 550,
   '@media (max-width: 600px)': {
     width: 300,
     height: 700
@@ -27,11 +27,41 @@ const CardWrapper = styled(Box)(({ theme, top, left }) => ({
 const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
   const [editedPatient, setEditedPatient] = useState({ ...patient });
   const [showInput, setShowInput] = useState(false);
+  const [historial, setHistorial] = useState([]);
+  const [idUnico, setIdUnico] = useState('');
 
+  console.log("entre");
+  console.log(editedPatient);
   useEffect(() => {
     // Actualizar el estado interno si cambia la prop 'patient'
     setEditedPatient({ ...patient });
+    // Obtener el historial del paciente
+    fetchPatientHistory(patient.id_persona); // Aquí corregimos patient.id_persona
   }, [patient]);
+
+
+  const fetchPatientHistory = async (patientId) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/paciente/${patientId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      });
+      console.log(response)
+      if (!response.ok) {
+        throw new Error('Error al obtener el historial del paciente');
+      }
+      const data = await response.json();
+      console.log(data);
+      // Aquí podrías verificar si los datos están en el formato esperado antes de establecer el historial
+      setHistorial(data);
+    } catch (error) {
+      console.error('Error al obtener el historial del paciente:', error.message);
+    }
+  };
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +82,6 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
         body: JSON.stringify(editedPatient)
       });
       if (response.ok) {
-        // Realiza la redirección o cualquier acción adicional después de guardar los cambios
         onSave(editedPatient); // Actualiza el estado del componente padre
         window.location.reload(); // Recarga la página después de guardar los cambios
       } else {
@@ -63,9 +92,42 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
     }
   };
 
-  const handleAnalizarClick = () => {
-    setShowInput(true);
+  const handleIdUnicoChange = (e) => {
+    const { value } = e.target;
+    console.log("Nuevo valor de idUnico:", value);
+    setIdUnico(value);
   };
+  
+  const handleconsulta = async () => {
+    console.log("Valor de idUnico en handleconsulta:", idUnico);
+    try {
+      const response = await fetch('http://localhost:3001/api/consulta', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id_unico: idUnico,
+          id_paciente: patient.id_persona,
+        })
+      });
+      console.log(response);
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Respuesta del servidor:', data);
+      } else {
+        throw new Error('La solicitud no fue exitosa');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error.message);
+    }
+  };
+  
+
+  const handleID_unicoClick = () => {
+    setShowInput(true); // Aquí establecemos showInput en true para mostrar el input
+  };
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -76,12 +138,6 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
       [name]: numericValue
     }));
   };
-
-  const [historial] = useState([
-    { id: 'GA32', fecha: '24/24/24' },
-    { id: 'GA65', fecha: '24/20/24' },
-    { id: 'GA56', fecha: '24/2/24' }
-  ]);
 
   const [cardsHisto] = useState(3);
 
@@ -115,7 +171,7 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            gap: '120px',
+            gap: '50px',
             bottom: '20px',
             '@media (max-width: 600px)': { gap: '20px' }
           }}
@@ -123,14 +179,36 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
           <Button variant="contained" onClick={handleSave}>
             Guardar cambios
           </Button>
-          <Button variant="contained" onClick={handleAnalizarClick}>
+
+          <Button variant="contained" onClick={handleID_unicoClick}>
+            ID Unico
+          </Button>
+
+          <Button
+            type="submit"
+            variant="contained"
+            onClick={handleconsulta}
+          >
             Analizar
           </Button>
+
           <Button variant="contained" onClick={onCancel}>
             Cancelar
           </Button>
         </Box>
-        {showInput && <Input placeholder="Ingrese aquí" value={'Tu ID es: ' + editedPatient.nombres} onChange={handleInputChange} />}
+        
+        {showInput && (
+          <Input
+            placeholder="Ingrese ID Unico aquí"
+            type="text"
+            value={idUnico}
+            name="id_unico"
+            label="ID Unico"
+            onChange={handleIdUnicoChange}
+          />
+        
+        )}
+
       </Box>
     </CardWrapper>
   );

@@ -18,6 +18,16 @@ const other = {
       icon: icons.IconCirclePlus,
       breadcrumbs: false
     },
+   
+      // {
+      //     id: 'historial',
+      //     title: 'historial',
+      //     type: 'item',
+      //     url: '/other/historial',
+      //     target: true
+      // },
+
+  
     // {
     //   id: 'Sp32',
     //   title: 'Dispositivo',

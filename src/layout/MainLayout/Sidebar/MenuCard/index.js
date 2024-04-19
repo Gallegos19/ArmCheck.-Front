@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import io from 'socket.io-client';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
@@ -19,7 +20,6 @@ import {
   linearProgressClasses
 } from '@mui/material';
 
-// styles
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
   borderRadius: 30,
@@ -49,8 +49,6 @@ const CardStyle = styled(Card)(({ theme }) => ({
   }
 }));
 
-// ==============================|| PROGRESS BAR WITH LABEL ||============================== //
-
 function LinearProgressWithLabel({ value, ...others }) {
   const theme = useTheme();
 
@@ -79,39 +77,43 @@ LinearProgressWithLabel.propTypes = {
   value: PropTypes.number
 };
 
-// ==============================|| SIDEBAR MENU Card ||============================== //
-
 const MenuCard = () => {
   const theme = useTheme();
   const [inputValue, setInputValue] = useState('');
-  const [isValid, setIsValid] = useState(true); // Estado inicial de validación: true
-  const [sala, setSala] = useState(false);
+  const [isValid, setIsValid] = useState(true);
+  const [connected, setConnected] = useState(false);
 
-  // Función de validación
-  const validateInput = (value) => {
-    // Ejemplo de validación: el valor no puede estar vacío
-    const isValid = value.trim() !== '';
-    setIsValid(isValid);
-    return isValid;
-  };
+  useEffect(() => {
+    const isConnected = localStorage.getItem('connected') === 'true';
+    setConnected(isConnected);
+  }, []);
 
-  // Manejador de cambio del input
   const handleInputChange = (event) => {
-    const value = event.target.value;
-    setInputValue(value);
-    validateInput(value); // Validar el nuevo valor del input
-  };
+    setInputValue(event.target.value);
+  };                     
 
-  // Manejador del envío del formulario
   const handleSubmit = () => {
-    if (validateInput(inputValue)) {
-      // Si el input es válido, realizar el envío de datos
-      setSala(true);
-      console.log('Input válido, enviando datos:', inputValue);
+    if (inputValue.trim() !== '') {
+      const socket = io('http://34.238.54.29:3001');
+      setIsValid(true);
+      socket.on('connect', () => {
+        console.log('Connected to socket.io server');
+        setConnected(true);
+        localStorage.setItem('connected', 'true');
+        socket.emit('joinRoom', inputValue);
+      });
+      socket.on('disconnect', () => {
+        console.log('Disconnected from socket.io server');
+        setConnected(false);
+        localStorage.setItem('connected', 'false');
+        socket.disconnect();
+      });
+      socket.on('error', (error) => {
+        console.error('Socket.io error:', error);
+        setConnected(false);
+      });
     } else {
-      // Si el input no es válido, mostrar un mensaje de error o realizar otra acción
-      console.error('Input no válido, no se puede enviar');
-      setSala(false);
+      console.error('Invalid input');
     }
   };
 
@@ -160,23 +162,20 @@ const MenuCard = () => {
                 sx={{ mt: 1.5 }}
                 primary={
                   <Typography variant="subtitle1" sx={{ color: theme.palette.primary[800] }}>
-                    {sala && <a>Conectado</a>}
-                    {!sala && <a>Desconectado</a>}
+                    {connected ? 'Conectado' : 'Desconectado'}
                   </Typography>
                 }
               />
             </ListItem>
           </List>
-          {sala && <LinearProgressWithLabel value={100} />}
-          {!sala && <LinearProgressWithLabel value={0} />}
+          {connected ? <LinearProgressWithLabel value={100} /> : <LinearProgressWithLabel value={0} />}
         </CardContent>
       </CardStyle>
       <br />
-      {!sala && (
+      {!connected && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
           <Input placeholder="Ingrese código de sala" value={inputValue} onChange={handleInputChange} style={{ textAlign: 'center' }} />
           <Button onClick={handleSubmit}>Enviar</Button>
-          {/* Mensaje de error si el input no es válido */}
           {!isValid && (
             <Typography variant="caption" color="error">
               Ingrese un código válido

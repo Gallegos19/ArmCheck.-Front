@@ -20,8 +20,8 @@ const CardWrapper = styled(Box)(({ theme, top, left }) => ({
   height: 550,
   '@media (max-width: 600px)': {
     width: 300,
-    height: 700,
-  },
+    height: 700
+  }
 }));
 
 const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
@@ -67,19 +67,19 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
     const { name, value } = e.target;
     setEditedPatient((prevPatient) => ({
       ...prevPatient,
-      [name]: value,
+      [name]: value
     }));
   };
 
   const handleSave = async () => {
     console.log('Guardando cambios...');
     try {
-      const response = await fetch(`http://localhost:3001/api/paciente/${editedPatient.id_persona}`, {
+      const response = await fetch(`http://localhost:3004/api/paciente/${editedPatient.id_persona}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(editedPatient),
+        body: JSON.stringify(editedPatient)
       });
       if (response.ok) {
         onSave(editedPatient); // Actualiza el estado del componente padre
@@ -135,7 +135,7 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
     const numericValue = !isNaN(value) ? parseFloat(value) : value;
     setEditedPatient((prevPatient) => ({
       ...prevPatient,
-      [name]: numericValue,
+      [name]: numericValue
     }));
   };
 
@@ -146,52 +146,22 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
       <Box>
         <List sx={{ py: 2 }}>
           <ListItem disableGutters>
-            <TextField
-              name="nombres"
-              label="Nombre"
-              value={editedPatient.nombres}
-              onChange={handleChange}
-            />
+            <TextField name="nombres" label="Nombre" value={editedPatient.nombres} onChange={handleChange} />
           </ListItem>
           <ListItem disableGutters>
-            <TextField
-              name="apellidos"
-              label="Apellidos"
-              value={editedPatient.apellidos}
-              onChange={handleChange}
-            />
+            <TextField name="apellidos" label="Apellidos" value={editedPatient.apellidos} onChange={handleChange} />
           </ListItem>
           <ListItem disableGutters>
-            <TextField
-              name="edad"
-              label="Edad"
-              value={editedPatient.edad}
-              onChange={handleInputChange}
-            />
+            <TextField name="edad" label="Edad" value={editedPatient.edad} onChange={handleInputChange} />
           </ListItem>
           <ListItem disableGutters>
-            <TextField
-              name="altura"
-              label="Altura"
-              value={editedPatient.altura}
-              onChange={handleInputChange}
-            />
+            <TextField name="altura" label="Altura" value={editedPatient.altura} onChange={handleInputChange} />
           </ListItem>
           <ListItem disableGutters>
-            <TextField
-              name="peso"
-              label="Peso"
-              value={editedPatient.peso}
-              onChange={handleInputChange}
-            />
+            <TextField name="peso" label="Peso" value={editedPatient.peso} onChange={handleInputChange} />
           </ListItem>
           <ListItem disableGutters>
-            <TextField
-              name="genero"
-              label="Genero"
-              value={editedPatient.genero}
-              onChange={handleChange}
-            />
+            <TextField name="genero" label="Genero" value={editedPatient.genero} onChange={handleChange} />
           </ListItem>
         </List>
         <CardHistorial historial={historial} cardsHisto={cardsHisto} />
@@ -203,7 +173,7 @@ const EditPatientCard = ({ patient, onCancel, onSave, top, left }) => {
             alignItems: 'center',
             gap: '50px',
             bottom: '20px',
-            '@media (max-width: 600px)': { gap: '20px' },
+            '@media (max-width: 600px)': { gap: '20px' }
           }}
         >
           <Button variant="contained" onClick={handleSave}>
@@ -249,7 +219,7 @@ EditPatientCard.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   top: PropTypes.string,
-  left: PropTypes.string,
+  left: PropTypes.string
 };
 
 export default EditPatientCard;

@@ -2,7 +2,7 @@
 import { IconBrandChrome, IconHelp, IconCirclePlus, IconRouter, IconBrandMyOppo } from '@tabler/icons';
 
 // constant
-const icons = { IconBrandChrome, IconHelp, IconCirclePlus, IconRouter, IconBrandMyOppo};
+const icons = { IconBrandChrome, IconHelp, IconCirclePlus, IconRouter, IconBrandMyOppo };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -37,13 +37,13 @@ const other = {
     //   breadcrumbs: false
     // },
     {
-        id: 'suscription',
-        title: 'Membresia',
-        type: 'item',
-        url: '/other/suscription',
-        icon: icons.IconBrandMyOppo,
-        breadcrumbs: false
-      }
+      id: 'suscription',
+      title: 'Membresia',
+      type: 'item',
+      url: '/other/suscription',
+      icon: icons.IconBrandMyOppo,
+      breadcrumbs: false
+    }
   ]
 };
 

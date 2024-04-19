@@ -82,7 +82,7 @@ const FirebaseLogin = ({ ...others }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/login', {
+      const response = await fetch('http://localhost:3004/api/auth/login', {
         method: 'POST',
         body: JSON.stringify(user),
         headers: {
@@ -95,9 +95,16 @@ const FirebaseLogin = ({ ...others }) => {
       }
       // Leer y almacenar el token de la respuesta
       const data = await response.json();
+      console.log(data.especialidad);
+      const especialidad = data.especialidad;
       localStorage.setItem('data', JSON.stringify(data));
-      setSesion(true);
-      navigate('/dashboard/default');
+      if (especialidad !== 'administrador') {
+        setSesion(true);
+        navigate('/dashboard/default');
+      } else {
+        setSesion(true);
+        navigate('/other/page-admin');
+      }
     } catch {
       console.log('Error al iniciar sesión:');
     }

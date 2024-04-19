@@ -31,7 +31,7 @@ const HistorialPaciente = ({ top, left }) => {
   const [dataId, setDataId] = useState('');
   const [chartData, setChartData] = useState([]);
   const [xDomain, setXDomain] = useState([0, 1]);
-
+  
   useEffect(() => {
     const intervalId = setInterval(() => {
       setDrawnPoints(prevPoints => {

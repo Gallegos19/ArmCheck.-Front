@@ -20,6 +20,8 @@ const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons
 const OtherAddPatient = Loadable(lazy(() => import('views/others/AddPatien')));
 const OtherSp32 = Loadable(lazy(() => import('views/others/SP32')));
 const OtherSuscription = Loadable(lazy(() => import('views/others/Suscription')));
+const AdminPage = Loadable(lazy(() => import('views/others/AdminPage')));
+
 const HistorialP = Loadable(lazy(() => import('views/others/Historial')));
 // sample page routing
 const SamplePage = Loadable(lazy(() => import('views/sample-page')));
@@ -111,6 +113,15 @@ const MainRoutes = {
         {
           path: 'conectar-dispositivo',
           element: isAuthenticated() ? <OtherSp32 /> : <Navigate to="/pages/login/login3" />
+        }
+      ]
+    },
+    {
+      path: 'other',
+      children: [
+        {
+          path: 'page-admin',
+          element: isAuthenticated() ? <AdminPage /> : <Navigate to="/pages/login/login3" />
         }
       ]
     },

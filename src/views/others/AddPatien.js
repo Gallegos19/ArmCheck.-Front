@@ -41,7 +41,7 @@ const AddPatient = ({ ...others }) => {
   const handleSubmit = async (values, { setSubmitting }) => {
     console.log(values);
     try {
-      const response = await fetch('http://localhost:3001/api/paciente', {
+      const response = await fetch('http://localhost:3004/api/paciente', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -56,8 +56,8 @@ const AddPatient = ({ ...others }) => {
           genero: values.genero
         })
       });
-      console.log(response);
       if (response.ok) {
+        // Verifica si la respuesta es exitosa (código de estado 200-299)
         const data = await response.json();
         console.log('Respuesta del servidor:', data);
         navigate('/dashboard/default');
@@ -73,7 +73,6 @@ const AddPatient = ({ ...others }) => {
       setSubmitting(false);
     }
   };
-
 
   return (
     <>
@@ -99,7 +98,7 @@ const AddPatient = ({ ...others }) => {
             edad: Yup.number().positive('La edad debe ser un valor positivo').max(255).required('Edad del paciente es requerido'),
             altura: Yup.number().positive('La altura debe ser un valor positivo').max(255).required('Altura del paciente es requerido'),
             peso: Yup.number().positive('El peso debe ser un valor positivo').max(255).required('Peso del paciente es requerido'),
-            genero: Yup.string().required('Género del paciente es requerido'),
+            genero: Yup.string().required('Género del paciente es requerido')
           })}
           onSubmit={handleSubmit}
         >

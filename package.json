@@ -17,6 +17,7 @@
     "axios": "^1.6.8",
     "formik": "^2.2.9",
     "framer-motion": "^6.3.16",
+    "http-proxy-middleware": "^3.0.0",
     "material-ui-popup-state": "^4.0.1",
     "mqtt": "^5.5.2",
     "prop-types": "^15.8.1",
@@ -30,6 +31,7 @@
     "react-router-dom": "6.3.0",
     "react-scripts": "^5.0.1",
     "redux": "^4.2.0",
+    "socket.io-client": "^4.7.5",
     "yup": "^0.32.11"
   },
   "scripts": {
